@@ -83,6 +83,10 @@ class Rater(models.Model):
     zip_code = models.CharField(max_length=10,
                               null=True)
 
+    def num_reviews(self):
+        return self.rating_set.count()
+
+
     def __str__(self):
         return "UserID: {}, {}, {}, zip: {}, job: {}".format(self.id , self.gender, self.age, self.zip_code,
                                                              self.job)
@@ -135,7 +139,14 @@ class Movie(models.Model):
                              max_length=30)
 
     def __str__(self):
-        return "{}, genre: {}".format(self.title, self.genre)
+        return "{}, genre: {}, avg. rating: {}".format(self.title, self.genre, self.average_rating())
+
+    def average_rating(self):
+        ratings = self.rating_set.all()
+        total = 0
+        for rating in ratings:
+            total += rating.rating
+        return total/len(ratings)
 
 
 class Rating(models.Model):

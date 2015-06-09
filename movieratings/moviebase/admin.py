@@ -12,7 +12,7 @@ class RatingAdmin(admin.ModelAdmin):
     list_display = ['movie', 'rater', 'rating']
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ['title', 'genre']
+    list_display = ['__str__', 'genre']
 
 
 admin.site.register(Rater, RaterAdmin)

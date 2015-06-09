@@ -62,3 +62,7 @@ target/
 data/
 *.sqlite
 *.sqlite3
+
+.direnv/
+.envrc
+.idea/

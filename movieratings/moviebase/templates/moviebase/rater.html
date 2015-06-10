@@ -1,0 +1,12 @@
+{% extends "moviebase/base.html" %}
+
+{% block content %}
+    <h1>This is the page for User {{ rater.id }}</h1>
+
+    <h3>Ratings</h3>
+    {% for rating in ratings %}
+        <div>
+            <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating: {{ rating.rating }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

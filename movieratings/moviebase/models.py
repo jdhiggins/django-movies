@@ -159,7 +159,8 @@ class Movie(models.Model):
     #                          max_length=30)
 
     def __str__(self):
-        return "{}, || avg. rating: {}".format(self.title, self.average_rating())
+        return self.title
+#        return "{}, || avg. rating: {}".format(self.title, self.average_rating())
 
     def average_rating(self):
         ratings = self.rating_set.all()

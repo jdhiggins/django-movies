@@ -19,6 +19,7 @@ from moviebase import views as moviebase_views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^top_movies/', moviebase_views.top_movies)
-
+    url(r'^moviebase/$', moviebase_views.top_movies, name="top_movies"),
+    url(r'^moviebase/rater/(?P<rater_id>\d+)$', moviebase_views.show_rater, name="show_rater"),
+    url(r'^moviebase/movie/(?P<movie_id>\d+)$', moviebase_views.show_movie, name="show_movie")
 ]

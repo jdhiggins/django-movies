@@ -6,21 +6,28 @@ from .models import Movie, Rater, Rating
 
 
 def top_movies(request):
-    # movie_queryset = Movie.objects.all()
-    # movie_ratings_dict = {m.title: m.average_rating() for m in movie_queryset}
-    # sorted_movies = sorted(movie_ratings_dict.items(), key=operator.itemgetter(1), reverse=True)
-    # if len(movie_queryset) < 10:
-    #     movies = sorted_movies[:len(movie_queryset)]
-    # else:
-    #     movies = sorted_movies[:10]
-#    movies_list = Movie.top_movies()
-    return render(request, "moviebase/top_movies.html", name="top_movies")
+    movie_queryset = Movie.objects.all()
+    movie_ratings_dict = {m: m.average_rating() for m in movie_queryset if isinstance(m.average_rating(), float)}
+    sorted_movies = sorted(movie_ratings_dict.items(), key=operator.itemgetter(1), reverse=True)
+    movies = [movie[0] for movie in sorted_movies]
+    movies = movies[:20]
+    return render(request, "moviebase/top_movies.html",
+                  {"movies": movies})
 
-#
-# def show_user(request, user_id):
-#     user = User.objects.get(user_id())
-#     statuses = user.status_set
-#     return render(request,
-#                   "updates/user.html",
-#                   {"user": user})
 
+def show_rater(request, rater_id):
+    rater = Rater.objects.get(pk=rater_id)
+    ratings = rater.rating_set.all()
+    return render(request,
+                  "moviebase/rater.html",
+                  {"rater": rater,
+                   "ratings": ratings})
+
+
+def show_movie(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
+    ratings = movie.rating_set.all()
+    return render(request,
+                  "moviebase/movie.html",
+                  {"movie": movie,
+                   "ratings": ratings})

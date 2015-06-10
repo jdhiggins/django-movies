@@ -1,4 +1,5 @@
 from django.db import models
+import operator
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -87,9 +88,22 @@ class Rater(models.Model):
         return self.rating_set.count()
 
 
+    def movies_seen(self):
+        ratings = self.rating_set.all()
+        return {rating.movie: rating.rating for rating in ratings}
+
+
+    def average_rating(self):
+        ratings = self.rating_set.all()
+        total = 0
+        for rating in ratings:
+            total += rating.rating
+        return total/len(ratings)
+
+
     def __str__(self):
-        return "UserID: {}, {}, {}, zip: {}, job: {}".format(self.id , self.gender, self.age, self.zip_code,
-                                                             self.job)
+        return "UserID: {} || {} || {} || zip: {} || job: {}".format(self.id , self.gender, self.age, self.zip_code,
+                                                                     self.job)
 
 
 class Movie(models.Model):
@@ -139,7 +153,7 @@ class Movie(models.Model):
                              max_length=30)
 
     def __str__(self):
-        return "{}, genre: {}, avg. rating: {}".format(self.title, self.genre, self.average_rating())
+        return "{}, || genre: {}, || avg. rating: {}".format(self.title, self.genre, self.average_rating())
 
     def average_rating(self):
         ratings = self.rating_set.all()
@@ -147,6 +161,12 @@ class Movie(models.Model):
         for rating in ratings:
             total += rating.rating
         return total/len(ratings)
+
+    def top_movies(self, num):
+        movie_queryset = Movie.objects.all()
+        movie_ratings_dict = {m.title: m.average_rating() for m in movie_queryset}
+        sorted_movies = sorted(movie_ratings_dict.items(), key=operator.itemgetter(1), reverse=True)
+        return sorted_movies[:10]
 
 
 class Rating(models.Model):
@@ -173,5 +193,5 @@ class Rating(models.Model):
     date_posted = models.DateTimeField(null=True)
 
     def __str__(self):
-        return "{} reviewed {}, gave {} rating.".format(self.rater.id, self.movie.title, self.rating)
+        return "{} reviewed {} || {} * rating.".format(self.rater.id, self.movie.title, self.rating)
 

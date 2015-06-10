@@ -6,13 +6,19 @@ from django.contrib import admin
 from .models import Rater, Rating, Movie
 
 class RaterAdmin(admin.ModelAdmin):
-    list_display = ['gender', 'age', 'zip_code']
+    list_display = ['gender', 'age', 'num_reviews', 'average_rating', 'zip_code']
 
 class RatingAdmin(admin.ModelAdmin):
     list_display = ['movie', 'rater', 'rating']
+    fieldsets = [
+        ('Rating information',  {'fields': ['rater', 'movie', 'rating']}),
+        ('Date information',    {'fields': ['date_posted']}),
+    ]
+    list_filter = ['rater']
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'genre']
+    list_display = ['__str__', 'average_rating', 'genre']
+    search_fields = ['title']
 
 
 admin.site.register(Rater, RaterAdmin)

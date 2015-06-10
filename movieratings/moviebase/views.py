@@ -7,7 +7,7 @@ from .models import Movie, Rater, Rating
 
 def top_movies(request):
     movie_queryset = Movie.objects.all()
-    movie_ratings_dict = {m: m.average_rating() for m in movie_queryset if isinstance(m.average_rating(), float)}
+    movie_ratings_dict = {m: m.average_rating for m in movie_queryset if isinstance(m.average_rating, float)}
     sorted_movies = sorted(movie_ratings_dict.items(), key=operator.itemgetter(1), reverse=True)
     movies = [movie[0] for movie in sorted_movies]
     movies = movies[:20]

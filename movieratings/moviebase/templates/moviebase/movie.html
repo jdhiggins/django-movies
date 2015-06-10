@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>This is the page for {{ movie.title }}</h1>
-
+    <h2>Average rating: {{movie.average_rating }}</h2>
     <h3>Ratings</h3>
     {% for rating in ratings %}
         <div>

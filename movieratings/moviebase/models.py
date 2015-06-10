@@ -162,6 +162,7 @@ class Movie(models.Model):
         return self.title
 #        return "{}, || avg. rating: {}".format(self.title, self.average_rating())
 
+    @property
     def average_rating(self):
         ratings = self.rating_set.all()
         total = 0
@@ -181,6 +182,7 @@ class Movie(models.Model):
             return sorted_movies[:len(movie_queryset)]
         else:
             return sorted_movies[:10]
+
 
 
 

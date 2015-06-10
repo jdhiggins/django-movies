@@ -11,13 +11,13 @@ class RaterAdmin(admin.ModelAdmin):
 class RatingAdmin(admin.ModelAdmin):
     list_display = ['movie', 'rater', 'rating']
     fieldsets = [
-        ('Rating information',  {'fields': ['rater', 'movie', 'rating']}),
-        ('Date information',    {'fields': ['date_posted']}),
+        ('Rating information',  {'fields': ['rater', 'rating']}),
+        ('Movie information',    {'fields': ['movie']}),
     ]
     list_filter = ['rater']
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'average_rating', 'genre']
+    list_display = ['__str__', 'average_rating']
     search_fields = ['title']
 
 

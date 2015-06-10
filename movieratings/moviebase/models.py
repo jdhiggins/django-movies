@@ -85,20 +85,26 @@ class Rater(models.Model):
                               null=True)
 
     def num_reviews(self):
+        #add if ratings
         return self.rating_set.count()
 
 
     def movies_seen(self):
+        #add if ratings
         ratings = self.rating_set.all()
         return {rating.movie: rating.rating for rating in ratings}
 
 
     def average_rating(self):
+        #add if ratings:
         ratings = self.rating_set.all()
         total = 0
-        for rating in ratings:
-            total += rating.rating
-        return total/len(ratings)
+        if ratings:
+            for rating in ratings:
+                total += rating.rating
+            return total/len(ratings)
+        else:
+            return "No ratings"
 
 
     def __str__(self):
@@ -107,66 +113,75 @@ class Rater(models.Model):
 
 
 class Movie(models.Model):
-    title = models.CharField(max_length=200, null=True)
-
-    ACTION = "Action"
-    ADVENTURE = "Adventure"
-    ANIMATION = "Animation"
-    CHILDREN = "Children's"
-    COMEDY = "Comedy"
-    CRIME = "Crime"
-    DOCUMENTARY = "Documentary"
-    DRAMA = "Drama"
-    FANTASY = "Fantasy"
-    FILM_NOIR = "Film-Noir"
-    HORROR = "Horror"
-    MUSICAL = "Musical"
-    MYSTERY = "Mystery"
-    ROMANCE = "Romance"
-    SCIFI = "Sci-Fi"
-    THRILLER = "Thriller"
-    WAR = "War"
-    WESTERN = "Western"
-    GENRE_CHOICES = (
-        (ACTION, "Action"),
-        (ADVENTURE, "Adventure"),
-        (ANIMATION, "Animation"),
-        (CHILDREN, "Children's"),
-        (COMEDY, "Comedy"),
-        (CRIME, "Crime"),
-        (DOCUMENTARY, "Documentary"),
-        (DRAMA, "Drama"),
-        (FANTASY, "Fantasy"),
-        (FILM_NOIR, "Film-Noir"),
-        (HORROR, "Horror"),
-        (MUSICAL, "Musical"),
-        (MYSTERY, "Mystery"),
-        (ROMANCE, "Romance"),
-        (SCIFI, "Sci-Fi"),
-        (THRILLER, "Thriller"),
-        (WAR, "War"),
-        (WESTERN, "Western")
-    )
-
-    genre = models.CharField(choices=GENRE_CHOICES,
-                             null=True,
-                             max_length=30)
+    title = models.CharField(max_length=255, null=True)
+    #
+    # ACTION = "Action"
+    # ADVENTURE = "Adventure"
+    # ANIMATION = "Animation"
+    # CHILDREN = "Children's"
+    # COMEDY = "Comedy"
+    # CRIME = "Crime"
+    # DOCUMENTARY = "Documentary"
+    # DRAMA = "Drama"
+    # FANTASY = "Fantasy"
+    # FILM_NOIR = "Film-Noir"
+    # HORROR = "Horror"
+    # MUSICAL = "Musical"
+    # MYSTERY = "Mystery"
+    # ROMANCE = "Romance"
+    # SCIFI = "Sci-Fi"
+    # THRILLER = "Thriller"
+    # WAR = "War"
+    # WESTERN = "Western"
+    # GENRE_CHOICES = (
+    #     (ACTION, "Action"),
+    #     (ADVENTURE, "Adventure"),
+    #     (ANIMATION, "Animation"),
+    #     (CHILDREN, "Children's"),
+    #     (COMEDY, "Comedy"),
+    #     (CRIME, "Crime"),
+    #     (DOCUMENTARY, "Documentary"),
+    #     (DRAMA, "Drama"),
+    #     (FANTASY, "Fantasy"),
+    #     (FILM_NOIR, "Film-Noir"),
+    #     (HORROR, "Horror"),
+    #     (MUSICAL, "Musical"),
+    #     (MYSTERY, "Mystery"),
+    #     (ROMANCE, "Romance"),
+    #     (SCIFI, "Sci-Fi"),
+    #     (THRILLER, "Thriller"),
+    #     (WAR, "War"),
+    #     (WESTERN, "Western")
+    # )
+    #
+    # genre = models.CharField(choices=GENRE_CHOICES,
+    #                          null=True,
+    #                          max_length=30)
 
     def __str__(self):
-        return "{}, || genre: {}, || avg. rating: {}".format(self.title, self.genre, self.average_rating())
+        return "{}, || avg. rating: {}".format(self.title, self.average_rating())
 
     def average_rating(self):
         ratings = self.rating_set.all()
         total = 0
         for rating in ratings:
             total += rating.rating
-        return total/len(ratings)
+        if ratings:
+            return total/len(ratings)
+        else:
+            return "No ratings"
+
 
     def top_movies(self, num):
         movie_queryset = Movie.objects.all()
         movie_ratings_dict = {m.title: m.average_rating() for m in movie_queryset}
         sorted_movies = sorted(movie_ratings_dict.items(), key=operator.itemgetter(1), reverse=True)
-        return sorted_movies[:10]
+        if len(movie_queryset) < 10:
+            return sorted_movies[:len(movie_queryset)]
+        else:
+            return sorted_movies[:10]
+
+
 
 
 class Rating(models.Model):
@@ -190,8 +205,8 @@ class Rating(models.Model):
 
     rater = models.ForeignKey(Rater, null=True)
 
-    date_posted = models.DateTimeField(null=True)
-
     def __str__(self):
         return "{} reviewed {} || {} * rating.".format(self.rater.id, self.movie.title, self.rating)
 
+    class Meta:
+        unique_together = ('rater', 'movie')

@@ -66,3 +66,5 @@ data/
 .direnv/
 .envrc
 .idea/
+
+movieratings/fixtures/

@@ -1,7 +1,7 @@
 from django.db import models
 import operator
 from django.contrib.auth.models import User
-
+from django.db.models import Avg, Count
 # Create your models here.
 
 class Rater(models.Model):
@@ -88,13 +88,12 @@ class Rater(models.Model):
         #add if ratings
         return self.rating_set.count()
 
-
     def movies_seen(self):
         #add if ratings
         ratings = self.rating_set.all()
         return {rating.movie: rating.rating for rating in ratings}
 
-
+    @property
     def average_rating(self):
         #add if ratings:
         ratings = self.rating_set.all()
@@ -102,10 +101,17 @@ class Rater(models.Model):
         if ratings:
             for rating in ratings:
                 total += rating.rating
-            return total/len(ratings)
+            return round(total/len(ratings), 2)
         else:
             return "No ratings"
 
+    @property
+    def ratings_count(self):
+        count_rating = self.rating_set.all().aggregate(Count('rating'))
+        if count_rating:
+            return (count_rating['rating__count'])
+        else:
+            return "No ratings"
 
     def __str__(self):
         return "UserID: {} || {} || {} || zip: {} || job: {}".format(self.id , self.gender, self.age, self.zip_code,
@@ -160,30 +166,24 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
-#        return "{}, || avg. rating: {}".format(self.title, self.average_rating())
+    # return "{}, || avg. rating: {}".format(self.title, self.average_rating())
 
     @property
     def average_rating(self):
-        ratings = self.rating_set.all()
-        total = 0
-        for rating in ratings:
-            total += rating.rating
-        if ratings:
-            return total/len(ratings)
+    # ratings = self.rating_set.all()
+        average_rating = self.rating_set.all().aggregate(Avg('rating'))
+        if average_rating:
+            return round(average_rating['rating__avg'], 2)
         else:
             return "No ratings"
 
-
-    def top_movies(self, num):
-        movie_queryset = Movie.objects.all()
-        movie_ratings_dict = {m.title: m.average_rating() for m in movie_queryset}
-        sorted_movies = sorted(movie_ratings_dict.items(), key=operator.itemgetter(1), reverse=True)
-        if len(movie_queryset) < 10:
-            return sorted_movies[:len(movie_queryset)]
+    @property
+    def ratings_count(self):
+        count_rating = self.rating_set.all().aggregate(Count('rating'))
+        if count_rating:
+            return (count_rating['rating__count'])
         else:
-            return sorted_movies[:10]
-
-
+            return "No ratings"
 
 
 

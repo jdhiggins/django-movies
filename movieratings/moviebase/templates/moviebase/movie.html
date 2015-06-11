@@ -1,12 +1,13 @@
 {% extends "moviebase/base.html" %}
 
 {% block content %}
-    <h1>This is the page for {{ movie.title }}</h1>
-    <h2>Average rating: {{movie.average_rating }}</h2>
-    <h3>Ratings</h3>
+    <h2>{{ movie.title }}</h2>
+    <h3>Average rating: {{movie.average_rating }}</h3>
+    <h3>Total ratings: {{movie.ratings_count}}</h3>
+    <h4>User Ratings:</h4>
     {% for rating in ratings %}
         <div>
-            <p><a href="{% url 'show_rater' rating.rater.id %}">{{ rating.rater }}</a> || Rating: {{ rating.rating }}</p>
+            <p><a href="{% url 'show_rater' rating.rater.id %}">User: {{ rating.rater.id }}</a> || Rating: {{ rating.rating }}</p>
         </div>
     {% endfor %}
 {% endblock %}

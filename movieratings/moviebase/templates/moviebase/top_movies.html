@@ -1,10 +1,10 @@
 {% extends "moviebase/base.html" %}
 
 {% block content %}
-    <h1>The top rated movies are:</h1>
+    <h1>Top 20 movies at MovieBase:</h1>
     <ol>
         {% for movie in movies %}
-                <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating: {{ movie.average_rating}}</li>
+                <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating: {{ movie.average_rating }}</li>
 
         {% endfor %}
     </ol>

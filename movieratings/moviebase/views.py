@@ -1,7 +1,11 @@
-from django.shortcuts import render
 import operator
 from django.db.models import Avg, Count
 from .models import Movie, Rater, Rating
+from .forms import UserForm, RaterForm
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -20,10 +24,17 @@ def top_movies(request):
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')[:20]
     return render(request, "moviebase/top_movies.html",
                   {"movies": movies})
-
+    # Have to do rating__rating because rating has relationship to movie as ForeignKey, otherwise can just do rating
+    #    as in    count_rating = self.rating_set.all().aggregate(Count('rating'))
+    #   -avg_rating means reverse the order
+    #   should look up num_ratings__gt  i think thats just how you filter by num_ratings
+    #   filter will pull only the things you ask for, exclude will pull the other stuff
+    #   annotate derives data from database and returns it  __ if you are looking in a related model
+    # gt is greater than, gte is greater than or equal to
 
 def show_rater(request, rater_id):
     rater = Rater.objects.get(pk=rater_id)
+    #probably should move this to model for rater as a property (rater.ratings)
     ratings = rater.rating_set.all()
     return render(request,
                   "moviebase/rater.html",
@@ -38,6 +49,51 @@ def show_movie(request, movie_id):
                   "moviebase/movie.html",
                   {"movie": movie,
                    "ratings": ratings})
+
+
+def user_register(request):
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        rater_form = RaterForm(data=request.POST)
+
+        if user_form.is_valid() and rater_form.is_valid():
+            user = user_form.save()
+            password = user.password
+            user.set_password(password)
+            user.save()
+
+            rater = rater_form.save(commit=False)
+            rater.user = user
+            rater.save()
+
+            registered = True
+
+            user = authenticate(username=user.username,
+                                password=password)
+            login(request, user)
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "Welcome, {}! You are now registered at MovieBase.".format(user.username)
+            )
+            return redirect('top_movies')
+
+    else:
+        user_form = UserForm()
+        rater_form = RaterForm()
+
+    return render(request,
+                  "moviebase/register.html",
+                  {'user_form': user_form,
+                   'rater_form': rater_form})
+
+
+
+
+
+
 
 
 # The top 5 publishers, in order by number of books.

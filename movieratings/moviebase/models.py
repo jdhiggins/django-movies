@@ -84,6 +84,8 @@ class Rater(models.Model):
     zip_code = models.CharField(max_length=10,
                               null=True)
 
+    user = models.OneToOneField(User, null=True)
+
     def num_reviews(self):
         #add if ratings
         return self.rating_set.count()
@@ -213,3 +215,19 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('rater', 'movie')
+
+
+def create_users():
+    for rater in Rater.objects.all():
+        user = User.objects.create_user('User{}'.format(rater.id),
+                                        'user{}'.format(rater.id),
+                                        '{}password'.format(rater.id))
+        rater.user = user
+        rater.save()
+
+
+def change_emails():
+    for user in User.objects.all():
+        email = user.email
+        user.email = "{}@example.com".format(email)
+        user.save()

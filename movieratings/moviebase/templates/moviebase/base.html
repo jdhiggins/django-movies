@@ -6,8 +6,15 @@
 </head>
 <body>
 <header>
-    <h1>Welcome to <a href="{% url 'top_movies' %}">MovieBase</a><i>-->>the movie ratings database</i></h2></h1>
-
+    <h1>Welcome to <a href="{% url 'top_movies' %}">MovieBase</a><i>-->>the movie ratings database</i></h1>
+    <div>
+      {{ user }}
+      {% if user.is_anonymous %}
+      <a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+      {% else %}
+      <a href="{% url 'django.contrib.auth.views.logout' %}">logout</a>
+      {% endif %}
+    </div>
 </header>
 {% block content %}
 {% endblock %}

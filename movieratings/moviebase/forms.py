@@ -118,4 +118,8 @@ class RatingForm(forms.ModelForm):
 
     class Meta:
         model = Rating
-        fields = ('movie', 'rating', 'rater')
+        fields = ('rating',)
+
+    # class Meta:
+    #     model = Rating
+    #     fields = ('rating')

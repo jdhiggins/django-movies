@@ -1,13 +1,21 @@
 {% extends "moviebase/base.html" %}
 
 {% block content %}
-    <h2>User {{ rater.id }}</h2>
-    <h4>Average rating: {{ rater.average_rating }}</h4>
-    <h4>Total ratings: {{ rater.ratings_count }}</h4>
-    <h3>Your Ratings history:</h3>
-    {% for rating in ratings %}
-        <div>
-            <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating: {{ rating.rating }}</p>
-        </div>
-    {% endfor %}
+    {% if user.is_anonymous %}
+        <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to see this page.</p>
+    {% elif user.rater = rater %}
+        <h2>User {{ rater.id }}</h2>
+        <h4>Average rating: {{ rater.average_rating }}</h4>
+        <h4>Total ratings: {{ rater.ratings_count }}</h4>
+        <h3>Your Ratings history:</h3>
+        {% for rating in ratings %}
+            <div>
+                <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating: {{ rating.rating }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>You can only view your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
+    {% endif %}
 {% endblock %}
+
+

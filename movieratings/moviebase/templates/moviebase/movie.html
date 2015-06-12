@@ -2,8 +2,26 @@
 
 {% block content %}
     <h2>{{ movie.title }}</h2>
-    <h3>Average rating: {{movie.average_rating }}</h3>
-    <h3>Total ratings: {{movie.ratings_count}}</h3>
+
+    <div>
+        {% if user.is_anonymous %}
+        <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to rate this movie.</p>
+        {% elif user_rating %}
+        <p>You have already reviewed {{ movie }}, you gave it a <em>{{ user_rating.rating }}</em></p>
+
+        {% else %}
+        <h2>Add a new rating</h2>
+        <form method="POST" action="{% url 'make_rating' movie.id %}">
+            {% csrf_token %}
+            {{ rating_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Add rating"/>
+        </form>
+        {% endif %}
+    </div>
+    <h3>Average rating: {{ movie.average_rating }}</h3>
+    <h3>Total ratings: {{ movie.ratings_count}}</h3>
     <h4>User Ratings:</h4>
     {% for rating in ratings %}
         <div>
@@ -11,3 +29,4 @@
         </div>
     {% endfor %}
 {% endblock %}
+

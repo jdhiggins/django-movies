@@ -228,6 +228,6 @@ def create_users():
 
 def change_emails():
     for user in User.objects.all():
-        email = user.email
-        user.email = "{}@example.com".format(email)
+        password = "password"
+        user.set_password(password)
         user.save()

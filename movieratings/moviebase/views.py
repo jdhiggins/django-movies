@@ -1,10 +1,12 @@
 import operator
 from django.db.models import Avg, Count
 from .models import Movie, Rater, Rating
-from .forms import UserForm, RaterForm
+from .forms import UserForm, RaterForm, RatingForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -91,6 +93,34 @@ def user_register(request):
 
 
 
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/moviebase/')
+
+
+def make_rating(request):
+
+    if request.method == 'POST':
+        rating_form = RatingForm(data=request.POST)
+
+        if rating_form.is_valid():
+            rating = rating_form.save()
+            rating.save()
+
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "You have registered a review of {}".format(rating.movie)
+            )
+            return redirect('top_movies')
+
+    else:
+        rating_form = RatingForm()
+
+    return render(request,
+                  "moviebase/rating.html",
+                  {'rating_form': rating_form})
 
 
 

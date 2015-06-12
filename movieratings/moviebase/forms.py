@@ -1,7 +1,7 @@
 __author__ = 'joshuahiggins'
 from django import forms
 from django.contrib.auth.models import User
-from .models import Rater
+from .models import Rater, Rating
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -93,3 +93,29 @@ class RaterForm(forms.ModelForm):
     class Meta:
         model = Rater
         fields = ('gender', 'age', 'job', 'zip_code')
+
+
+class RatingForm(forms.ModelForm):
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    RATING_CHOICES=(
+        (ONE, 1),
+        (TWO, 2),
+        (THREE, 3),
+        (FOUR, 4),
+        (FIVE, 5)
+    )
+
+    rating = forms.ChoiceField(choices=RATING_CHOICES,
+                               label="Rating",
+                               initial='',
+                               widget=forms.Select(),
+                               required=True)
+
+
+    class Meta:
+        model = Rating
+        fields = ('movie', 'rating', 'rater')

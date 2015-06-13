@@ -8,7 +8,13 @@
         <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to rate this movie.</p>
         {% elif user_rating %}
         <p>You have already reviewed {{ movie }}, you gave it a <em>{{ user_rating.rating }}</em></p>
+        <form method="POST" action="{% url 'edit_rating' movie.id user_rating.id %}">
+            {% csrf_token %}
+            {{ edit_form.as_p }}
 
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Edit rating"/>
+        </form>
         {% else %}
         <h2>Add a new rating</h2>
         <form method="POST" action="{% url 'make_rating' movie.id %}">

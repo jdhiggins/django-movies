@@ -1,7 +1,7 @@
 import operator
 from django.db.models import Avg, Count
 from .models import Movie, Rater, Rating
-from .forms import UserForm, RaterForm, RatingForm
+from .forms import UserForm, RaterForm, RatingForm, EditForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -55,12 +55,14 @@ def show_movie(request, movie_id):
     else:
         user_rating = None
     rating_form = RatingForm()
+    edit_form = EditForm()
     return render(request,
                   "moviebase/movie.html",
                   {"movie": movie,
                    "ratings": ratings,
                    "rating_form": rating_form,
-                   "user_rating": user_rating
+                   "user_rating": user_rating,
+                   "edit_form": edit_form
                    })
 
 
@@ -135,3 +137,25 @@ def make_rating(request, movie_id):
                   "moviebase/movie/{}.html".format(movie_id),
                   {'rating_form': rating_form})
 
+def edit_rating(request, movie_id, rating_id):
+    user_rating = Rating.objects.get(pk=rating_id)
+    if request.method == 'POST':
+
+        edit_form = EditForm(data=request.POST, instance = user_rating)
+
+        if edit_form.is_valid():
+            rating = edit_form.save(commit=False)
+            rating.save()
+
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "You have registered a review of {}".format(rating.movie)
+            )
+        return redirect('show_rater', request.user.rater.id)
+    else:
+        edit_form = EditForm(instance=user_rating)
+
+    return render(request,
+                  "moviebase/movie/{}.html".format(movie_id),
+                  {'edit_form': edit_form})

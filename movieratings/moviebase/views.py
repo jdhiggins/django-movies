@@ -1,7 +1,7 @@
 import operator
 from django.db.models import Avg, Count
 from .models import Movie, Rater, Rating
-from .forms import UserForm, RaterForm, RatingForm, EditForm
+from .forms import UserForm, RaterForm, RatingForm, EditForm, DeleteForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -35,13 +35,21 @@ def top_movies(request):
     # gt is greater than, gte is greater than or equal to
 
 def show_rater(request, rater_id):
+
+    movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
+        ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')
     rater = Rater.objects.get(pk=rater_id)
     #probably should move this to model for rater as a property (rater.ratings)
     ratings = rater.rating_set.all()
+    movie_set = [rating.movie for rating in ratings]
+    movies_not_seen = [movie for movie in movies if movie not in movie_set]
+
+
     return render(request,
                   "moviebase/rater.html",
                   {"rater": rater,
-                   "ratings": ratings})
+                   "ratings": ratings,
+                   "movies_not_seen": movies_not_seen[:20]})
 
 
 def show_movie(request, movie_id):
@@ -159,3 +167,25 @@ def edit_rating(request, movie_id, rating_id):
     return render(request,
                   "moviebase/movie/{}.html".format(movie_id),
                   {'edit_form': edit_form})
+
+
+
+def delete_rating(request, movie_id, rating_id):
+    user_rating = Rating.objects.get(pk=rating_id)
+    movie = user_rating.movie
+    if request.method == 'POST':
+        user_rating.delete()
+
+        messages.add_message(
+                request,
+                messages.SUCCESS,
+                "You have DELETED a review of {}".format(movie)
+            )
+        return redirect('show_rater', request.user.rater.id)
+    else:
+        delete_form = DeleteForm(instance=user_rating)
+
+    return render(request,
+                  "moviebase/movie/{}.html".format(movie_id),
+                  {'delete_form': delete_form})
+

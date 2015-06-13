@@ -145,3 +145,9 @@ class EditForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ('rating',)
+
+
+class DeleteForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        exclude = ('rating', 'model', 'rater')

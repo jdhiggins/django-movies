@@ -72,3 +72,5 @@ with open("data/ml-1m/movies.dat", encoding="windows-1252") as infile:
 
 with open("movieratings/fixtures/genres.json", "w") as outfile:
     outfile.write(json.dumps(genres))
+
+

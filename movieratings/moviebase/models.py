@@ -123,7 +123,7 @@ class Rater(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=255, null=True)
     genre = models.ManyToManyField(Genre)
-    
+
     def __str__(self):
         return self.title
     # return "{}, || avg. rating: {}".format(self.title, self.average_rating())

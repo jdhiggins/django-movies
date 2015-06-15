@@ -28,7 +28,7 @@ with open("data/ml-1m/movies.dat", encoding="windows-1252") as infile:
         movies.append({"model": "moviebase.Movie",
                        "pk": row[0],
                        "fields": {
-                           "title": row[1]
+                           "title": row[1],
                        }})
 
 with open("movieratings/fixtures/movies.json", "w") as outfile:
@@ -45,8 +45,28 @@ with open("data/ml-1m/ratings.dat") as infile:
                         "fields": {
                             "rater": row[0],
                             "movie": row[1],
-                            "rating": row[2]
+                            "rating": row[2],
+                            "posted_at": row[3],
                         }})
 
 with open("movieratings/fixtures/ratings.json", "w") as outfile:
     outfile.write(json.dumps(ratings))
+
+
+print("Converting genres...")
+genres = []
+with open("data/ml-1m/movies.dat", encoding="windows-1252") as infile:
+    reader = csv.reader((line.replace("::", ";") for line in infile),
+                        delimiter=";")
+    for row in reader:
+        genre_row_values = row[2].split("|")
+        for genre_value in genre_row_values:
+            genres.append({"model": "moviebase.Genre",
+                            "pk": row[0],
+                            "fields": {
+                                "genres": genre_value,
+                            }})
+
+
+with open("movieratings/fixtures/genres.json", "w") as outfile:
+    outfile.write(json.dumps(genres))

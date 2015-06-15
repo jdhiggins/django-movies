@@ -122,50 +122,8 @@ class Rater(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=255, null=True)
-    #
-    # ACTION = "Action"
-    # ADVENTURE = "Adventure"
-    # ANIMATION = "Animation"
-    # CHILDREN = "Children's"
-    # COMEDY = "Comedy"
-    # CRIME = "Crime"
-    # DOCUMENTARY = "Documentary"
-    # DRAMA = "Drama"
-    # FANTASY = "Fantasy"
-    # FILM_NOIR = "Film-Noir"
-    # HORROR = "Horror"
-    # MUSICAL = "Musical"
-    # MYSTERY = "Mystery"
-    # ROMANCE = "Romance"
-    # SCIFI = "Sci-Fi"
-    # THRILLER = "Thriller"
-    # WAR = "War"
-    # WESTERN = "Western"
-    # GENRE_CHOICES = (
-    #     (ACTION, "Action"),
-    #     (ADVENTURE, "Adventure"),
-    #     (ANIMATION, "Animation"),
-    #     (CHILDREN, "Children's"),
-    #     (COMEDY, "Comedy"),
-    #     (CRIME, "Crime"),
-    #     (DOCUMENTARY, "Documentary"),
-    #     (DRAMA, "Drama"),
-    #     (FANTASY, "Fantasy"),
-    #     (FILM_NOIR, "Film-Noir"),
-    #     (HORROR, "Horror"),
-    #     (MUSICAL, "Musical"),
-    #     (MYSTERY, "Mystery"),
-    #     (ROMANCE, "Romance"),
-    #     (SCIFI, "Sci-Fi"),
-    #     (THRILLER, "Thriller"),
-    #     (WAR, "War"),
-    #     (WESTERN, "Western")
-    # )
-    #
-    # genre = models.CharField(choices=GENRE_CHOICES,
-    #                          null=True,
-    #                          max_length=30)
-
+    genre = models.ManyToManyField(Genre)
+    
     def __str__(self):
         return self.title
     # return "{}, || avg. rating: {}".format(self.title, self.average_rating())
@@ -174,7 +132,7 @@ class Movie(models.Model):
     def average_rating(self):
     # ratings = self.rating_set.all()
         average_rating = self.rating_set.all().aggregate(Avg('rating'))
-        if average_rating:
+        if average_rating['rating__avg']:
             return round(average_rating['rating__avg'], 2)
         else:
             return "No ratings"
@@ -182,10 +140,58 @@ class Movie(models.Model):
     @property
     def ratings_count(self):
         count_rating = self.rating_set.all().aggregate(Count('rating'))
-        if count_rating:
+        if count_rating['rating_count']:
             return (count_rating['rating__count'])
         else:
             return "No ratings"
+
+
+class Genre(models.Model):
+    ACTION = "Action"
+    ADVENTURE = "Adventure"
+    ANIMATION = "Animation"
+    CHILDREN = "Children's"
+    COMEDY = "Comedy"
+    CRIME = "Crime"
+    DOCUMENTARY = "Documentary"
+    DRAMA = "Drama"
+    FANTASY = "Fantasy"
+    FILM_NOIR = "Film-Noir"
+    HORROR = "Horror"
+    MUSICAL = "Musical"
+    MYSTERY = "Mystery"
+    ROMANCE = "Romance"
+    SCIFI = "Sci-Fi"
+    THRILLER = "Thriller"
+    WAR = "War"
+    WESTERN = "Western"
+    GENRE_CHOICES = (
+        (ACTION, "Action"),
+        (ADVENTURE, "Adventure"),
+        (ANIMATION, "Animation"),
+        (CHILDREN, "Children's"),
+        (COMEDY, "Comedy"),
+        (CRIME, "Crime"),
+        (DOCUMENTARY, "Documentary"),
+        (DRAMA, "Drama"),
+        (FANTASY, "Fantasy"),
+        (FILM_NOIR, "Film-Noir"),
+        (HORROR, "Horror"),
+        (MUSICAL, "Musical"),
+        (MYSTERY, "Mystery"),
+        (ROMANCE, "Romance"),
+        (SCIFI, "Sci-Fi"),
+        (THRILLER, "Thriller"),
+        (WAR, "War"),
+        (WESTERN, "Western")
+    )
+
+    genre = models.CharField(choices=GENRE_CHOICES,
+                             null=True,
+                             max_length=30)
+
+    def __str__(self):
+        return self.genre
 
 
 

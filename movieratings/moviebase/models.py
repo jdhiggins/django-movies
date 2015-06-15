@@ -86,6 +86,7 @@ class Rater(models.Model):
 
     user = models.OneToOneField(User, null=True)
 
+
     def num_reviews(self):
         #add if ratings
         return self.rating_set.count()
@@ -122,49 +123,8 @@ class Rater(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=255, null=True)
-    #
-    # ACTION = "Action"
-    # ADVENTURE = "Adventure"
-    # ANIMATION = "Animation"
-    # CHILDREN = "Children's"
-    # COMEDY = "Comedy"
-    # CRIME = "Crime"
-    # DOCUMENTARY = "Documentary"
-    # DRAMA = "Drama"
-    # FANTASY = "Fantasy"
-    # FILM_NOIR = "Film-Noir"
-    # HORROR = "Horror"
-    # MUSICAL = "Musical"
-    # MYSTERY = "Mystery"
-    # ROMANCE = "Romance"
-    # SCIFI = "Sci-Fi"
-    # THRILLER = "Thriller"
-    # WAR = "War"
-    # WESTERN = "Western"
-    # GENRE_CHOICES = (
-    #     (ACTION, "Action"),
-    #     (ADVENTURE, "Adventure"),
-    #     (ANIMATION, "Animation"),
-    #     (CHILDREN, "Children's"),
-    #     (COMEDY, "Comedy"),
-    #     (CRIME, "Crime"),
-    #     (DOCUMENTARY, "Documentary"),
-    #     (DRAMA, "Drama"),
-    #     (FANTASY, "Fantasy"),
-    #     (FILM_NOIR, "Film-Noir"),
-    #     (HORROR, "Horror"),
-    #     (MUSICAL, "Musical"),
-    #     (MYSTERY, "Mystery"),
-    #     (ROMANCE, "Romance"),
-    #     (SCIFI, "Sci-Fi"),
-    #     (THRILLER, "Thriller"),
-    #     (WAR, "War"),
-    #     (WESTERN, "Western")
-    # )
-    #
-    # genre = models.CharField(choices=GENRE_CHOICES,
-    #                          null=True,
-    #                          max_length=30)
+    genre = models.ManyToManyField(Genre)
+
 
     def __str__(self):
         return self.title
@@ -217,6 +177,52 @@ class Rating(models.Model):
         unique_together = ('rater', 'movie')
 
 
+
+class Genre(models.Model):
+    ACTION = "Action"
+    ADVENTURE = "Adventure"
+    ANIMATION = "Animation"G
+    CHILDREN = "Children's"
+    COMEDY = "Comedy"
+    CRIME = "Crime"
+    DOCUMENTARY = "Documentary"
+    DRAMA = "Drama"
+    FANTASY = "Fantasy"
+    FILM_NOIR = "Film-Noir"
+    HORROR = "Horror"
+    MUSICAL = "Musical"
+    MYSTERY = "Mystery"
+    ROMANCE = "Romance"
+    SCIFI = "Sci-Fi"
+    THRILLER = "Thriller"
+    WAR = "War"
+    WESTERN = "Western"
+    GENRE_CHOICES = (
+        (ACTION, "Action"),
+        (ADVENTURE, "Adventure"),
+        (ANIMATION, "Animation"),
+        (CHILDREN, "Children's"),
+        (COMEDY, "Comedy"),
+        (CRIME, "Crime"),
+        (DOCUMENTARY, "Documentary"),
+        (DRAMA, "Drama"),
+        (FANTASY, "Fantasy"),
+        (FILM_NOIR, "Film-Noir"),
+        (HORROR, "Horror"),
+        (MUSICAL, "Musical"),
+        (MYSTERY, "Mystery"),
+        (ROMANCE, "Romance"),
+        (SCIFI, "Sci-Fi"),
+        (THRILLER, "Thriller"),
+        (WAR, "War"),
+        (WESTERN, "Western")
+    )
+
+    genre = models.CharField(choices=GENRE_CHOICES,
+                             null=True,
+                             max_length=30)
+
+
 def create_users():
     for rater in Rater.objects.all():
         user = User.objects.create_user('User{}'.format(rater.id),
@@ -231,3 +237,5 @@ def change_emails():
         password = "password"
         user.set_password(password)
         user.save()
+
+

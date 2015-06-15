@@ -7,6 +7,13 @@
 <body>
 <header>
     <h1>Welcome to <a href="{% url 'top_movies' %}">MovieBase</a><i>-->>the movie ratings database</i></h1>
+    {% if messages %}
+        <ul class="messages">
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+        </ul>
+    {% endif %}
     <div>
         {% if user.is_anonymous %}
             <p><a href="{% url 'django.contrib.auth.views.login' %}">Login  </a></p>
@@ -24,3 +31,4 @@
 </footer>
 </body>
 </html>
+

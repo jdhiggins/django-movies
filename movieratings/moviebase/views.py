@@ -158,7 +158,7 @@ def edit_rating(request, movie_id, rating_id):
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                "You have registered a review of {}".format(rating.movie)
+                "You have changed your review of {}".format(rating.movie)
             )
         return redirect('show_rater', request.user.rater.id)
     else:
@@ -179,7 +179,7 @@ def delete_rating(request, movie_id, rating_id):
         messages.add_message(
                 request,
                 messages.SUCCESS,
-                "You have DELETED a review of {}".format(movie)
+                "You have DELETED your review review of {}".format(movie)
             )
         return redirect('show_rater', request.user.rater.id)
     else:

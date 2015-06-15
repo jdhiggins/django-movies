@@ -2,6 +2,7 @@ from django.db import models
 import operator
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 class Rater(models.Model):
@@ -87,6 +88,8 @@ class Rater(models.Model):
     user = models.OneToOneField(User, null=True)
 
 
+
+
     def num_reviews(self):
         #add if ratings
         return self.rating_set.count()
@@ -123,7 +126,7 @@ class Rater(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=255, null=True)
-    genre = models.ManyToManyField(Genre)
+
 
 
     def __str__(self):
@@ -134,7 +137,7 @@ class Movie(models.Model):
     def average_rating(self):
     # ratings = self.rating_set.all()
         average_rating = self.rating_set.all().aggregate(Avg('rating'))
-        if average_rating:
+        if average_rating['rating__avg']:
             return round(average_rating['rating__avg'], 2)
         else:
             return "No ratings"
@@ -142,11 +145,16 @@ class Movie(models.Model):
     @property
     def ratings_count(self):
         count_rating = self.rating_set.all().aggregate(Count('rating'))
-        if count_rating:
+        if count_rating['rating__count']:
             return (count_rating['rating__count'])
         else:
             return "No ratings"
 
+
+
+def validate_one_to_five(value):
+    if value > 5 or value < 1 or not isinstance(value, int):
+        raise ValidationError('{} Must be 1 to 5 integer'.format(value))
 
 
 class Rating(models.Model):
@@ -163,8 +171,9 @@ class Rating(models.Model):
         (FIVE, 5)
     )
 
+
     rating = models.IntegerField(choices=RATING_CHOICES,
-                                 null=True)
+                                 null=True, validators=[validate_one_to_five])
 
     posted_at = models.DateTimeField(null=True)
 
@@ -226,20 +235,23 @@ class Genre(models.Model):
                              null=True,
                              max_length=30)
 
+
+    movie = models.ManyToManyField("Movies")
+
     def __str__(self):
-        return self.genre
+        return "{}".format(self.genre)
 
 
 def create_users():
     for rater in Rater.objects.all():
         user = User.objects.create_user('User{}'.format(rater.id),
-                                        'user{}'.format(rater.id),
+                                        'user{}@example.com'.format(rater.id),
                                         '{}password'.format(rater.id))
         rater.user = user
         rater.save()
 
 
-def change_emails():
+def change_password():
     for user in User.objects.all():
         password = "password"
         user.set_password(password)

@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -41,6 +42,7 @@ def show_rater(request, rater_id):
     rater = Rater.objects.get(pk=rater_id)
     #probably should move this to model for rater as a property (rater.ratings)
     ratings = rater.rating_set.all()
+    text_ratings = rater.text_rating_set.all()
     movie_set = [rating.movie for rating in ratings]
     movies_not_seen = [movie for movie in movies if movie not in movie_set]
 
@@ -49,6 +51,7 @@ def show_rater(request, rater_id):
                   "moviebase/rater.html",
                   {"rater": rater,
                    "ratings": ratings,
+                   "text_ratings": text_ratings,
                    "movies_not_seen": movies_not_seen[:20]})
 
 
@@ -121,12 +124,12 @@ def user_logout(request):
 
 
 def make_rating(request, movie_id):
-
+    movie = get_object_or_404(Movie, pk = movie_id)
     if request.method == 'POST':
         rating_form = RatingForm(data=request.POST)
 
         if rating_form.is_valid():
-            movie = Movie.objects.get(pk=movie_id)
+#            movie = Movie.objects.get(pk=movie_id)
             rating = rating_form.save(commit=False)
             rating.rater = request.user.rater
             rating.movie = movie

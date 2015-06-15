@@ -2,6 +2,7 @@ __author__ = 'joshuahiggins'
 from django import forms
 from django.contrib.auth.models import User
 from .models import Rater, Rating
+from django.core.exceptions import ValidationError
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -95,6 +96,7 @@ class RaterForm(forms.ModelForm):
         fields = ('gender', 'age', 'job', 'zip_code')
 
 
+
 class RatingForm(forms.ModelForm):
     ONE = 1
     TWO = 2
@@ -118,7 +120,7 @@ class RatingForm(forms.ModelForm):
 
     class Meta:
         model = Rating
-        fields = ('rating',)
+        fields = ('rating', 'text_rating')
 
 
 class EditForm(forms.ModelForm):
@@ -144,10 +146,10 @@ class EditForm(forms.ModelForm):
 
     class Meta:
         model = Rating
-        fields = ('rating',)
+        fields = ('rating', 'text_rating')
 
 
 class DeleteForm(forms.ModelForm):
     class Meta:
         model = Rating
-        exclude = ('rating', 'model', 'rater')
+        exclude = ('rating', 'model', 'rater', 'text_rating')

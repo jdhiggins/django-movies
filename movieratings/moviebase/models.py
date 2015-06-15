@@ -166,6 +166,10 @@ class Rating(models.Model):
     rating = models.IntegerField(choices=RATING_CHOICES,
                                  null=True)
 
+    posted_at = models.DateTimeField(null=True)
+
+    text_rating = models.CharField(max_length=255, null=True)
+
     movie = models.ForeignKey(Movie, null=True)
 
     rater = models.ForeignKey(Rater, null=True)
@@ -181,7 +185,7 @@ class Rating(models.Model):
 class Genre(models.Model):
     ACTION = "Action"
     ADVENTURE = "Adventure"
-    ANIMATION = "Animation"G
+    ANIMATION = "Animation"
     CHILDREN = "Children's"
     COMEDY = "Comedy"
     CRIME = "Crime"
@@ -221,6 +225,9 @@ class Genre(models.Model):
     genre = models.CharField(choices=GENRE_CHOICES,
                              null=True,
                              max_length=30)
+
+    def __str__(self):
+        return self.genre
 
 
 def create_users():

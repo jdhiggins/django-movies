@@ -122,7 +122,7 @@ class Rater(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=255, null=True)
-    genre = models.ManyToManyField(Genre)
+    genre = models.ManyToManyField("Genre")
 
     def __str__(self):
         return self.title
@@ -216,6 +216,10 @@ class Rating(models.Model):
 
     rater = models.ForeignKey(Rater, null=True)
 
+    posted_at = models.DateTimeField(null=True)
+
+    text_rating = models.CharField(max_length=255, null=True)
+
     def __str__(self):
         return "{} reviewed {} || {} * rating.".format(self.rater.id, self.movie.title, self.rating)
 
@@ -237,3 +241,7 @@ def change_emails():
         password = "password"
         user.set_password(password)
         user.save()
+
+
+
+

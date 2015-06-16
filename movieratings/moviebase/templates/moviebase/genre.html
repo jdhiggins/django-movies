@@ -1,30 +1,22 @@
 {% extends "moviebase/base.html" %}
 
 {% block content %}
-    <h1>Top 20 movies at MovieBase:</h1>
+    <h1>Top 20 {{ genre.genre }} movies:</h1>
     <ol>
-        {% for movie in movies %}
+        {% for movie in top_genre %}
                 <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
                    <strong>{{ movie.average_rating }}</strong>, Number of ratings:
                     <strong>{{ movie.ratings_count }}</strong></li>
 
         {% endfor %}
     </ol>
-    <h1>Most reviewed movies at MovieBase:</h1>
+    <h1>Most reviewed {{ genre.genre }} movies:</h1>
     <ol>
-        {% for movie in rated_movies %}
+        {% for movie in most_genre %}
                 <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
                     <strong>{{ movie.average_rating }}</strong>, Number of ratings:
                     <strong>{{ movie.ratings_count }}</strong></li>
         {% endfor %}
     </ol>
-    <h1>See movies by genre:</h1>
-    <ol>
-        {% for genre in genres %}
-                <li><a href="{% url 'show_genre' genre.id %}">{{ genre.genre }}</a></li>
-        {% endfor %}
-    </ol>
-
 
 {% endblock %}
-

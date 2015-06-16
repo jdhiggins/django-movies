@@ -1,6 +1,6 @@
 import operator
 from django.db.models import Avg, Count
-from .models import Movie, Rater, Rating
+from .models import Movie, Rater, Rating, Genre
 from .forms import UserForm, RaterForm, RatingForm, EditForm, DeleteForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -26,9 +26,11 @@ def top_movies(request):
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating').select_related()[:20]
     rated_movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).order_by('-num_ratings').select_related()[:20]
+    genres = Genre.objects.all()
     return render(request, "moviebase/top_movies.html",
                   {"movies": movies,
-                  "rated_movies": rated_movies})
+                   "rated_movies": rated_movies,
+                   "genres": genres})
     # Have to do rating__rating because rating has relationship to movie as ForeignKey, otherwise can just do rating
     #    as in    count_rating = self.rating_set.all().aggregate(Count('rating'))
     #   -avg_rating means reverse the order
@@ -75,6 +77,20 @@ def show_movie(request, movie_id):
                    "user_rating": user_rating,
                    "edit_form": edit_form
                    })
+
+
+def show_genre(request, genre_id):
+    genre = Genre.objects.get(pk=genre_id)
+    movies = genre.movie_set.all()
+    top_genre = movies.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
+        ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating').select_related()[:20]
+    most_genre = movies.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
+        ('rating__rating')).order_by('-num_ratings').select_related()[:20]
+    return render(request, "moviebase/genre.html",
+                  {"top_genre": top_genre,
+                   "most_genre": most_genre,
+                   "genre": genre})
+
 
 
 def user_register(request):

@@ -21,6 +21,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url('^', include('django.contrib.auth.urls')),
     url(r'^moviebase/$', moviebase_views.top_movies, name="top_movies"),
+    url(r'^moviebase/most_movies$', moviebase_views.most_movies, name="most_movies"),
+    url(r'^moviebase/all_genres$', moviebase_views.all_genres, name="all_genres"),
     url(r'^moviebase/rater/(?P<rater_id>\d+)$', moviebase_views.show_rater, name="show_rater"),
     url(r'^moviebase/movie/(?P<movie_id>\d+)$', moviebase_views.show_movie, name="show_movie"),
     url(r'^moviebase/register/$', moviebase_views.user_register, name="user_register"),

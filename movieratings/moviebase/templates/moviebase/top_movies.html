@@ -2,28 +2,28 @@
 
 {% block content %}
     <h1>Top 20 movies at MovieBase:</h1>
-    <ol>
+    <ul>
         {% for movie in movies %}
                 <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
                    <strong>{{ movie.average_rating }}</strong>, Number of ratings:
                     <strong>{{ movie.ratings_count }}</strong></li>
 
         {% endfor %}
-    </ol>
+    </ul>
     <h1>Most reviewed movies at MovieBase:</h1>
-    <ol>
+    <ul>
         {% for movie in rated_movies %}
                 <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
                     <strong>{{ movie.average_rating }}</strong>, Number of ratings:
                     <strong>{{ movie.ratings_count }}</strong></li>
         {% endfor %}
-    </ol>
+    </ul>
     <h1>See movies by genre:</h1>
-    <ol>
+    <ul>
         {% for genre in genres %}
                 <li><a href="{% url 'show_genre' genre.id %}">{{ genre.genre }}</a></li>
         {% endfor %}
-    </ol>
+    </ul>
 
 
 {% endblock %}

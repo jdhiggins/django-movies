@@ -1,0 +1,71 @@
+<!--<nav class="navbar navbar-default navbar-static-top">-->
+    <!--<div class="container">-->
+        <!--<div class="navbar-header">-->
+            <!--<a class="navbar-brand" href="{% url 'top_movies' %}">MovieBase</a>-->
+        <!--</div>-->
+        <!--<ul class="nav navbar-nav navbar-left">-->
+            <!--<li><a href="{% url "most_favorited_updates" %}">Most favorited-->
+                <!--updates</a></li>-->
+        <!--</ul>-->
+
+        <!--<ul class="nav navbar-nav navbar-right">-->
+            <!--{% if user.is_authenticated %}-->
+                <!--<li>-->
+                    <!--<a href="{% url 'show_rater' user.rater.id %}">Hi, {{ user.username }}</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<a href="{% url 'logout' %}">logout</a>-->
+                <!--</li>-->
+            <!--{% else %}-->
+                <!--<li>-->
+                    <!--<a href="{% url 'django.contrib.auth.views.login' %}">Login  </a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<a href="{% url 'user_register' %}">Register</a>-->
+                <!--</li>-->
+            <!--{% endif %}-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</nav>-->
+<!--<div class="container">-->
+    <!--{% bootstrap_messages %}-->
+    <!--{% block content %}-->
+    <!--{% endblock %}-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!--<nav class="navbar navbar-inverse">-->
+    <!--<div class="container">-->
+      <!--...-->
+    <!--</div>-->
+<!--</nav>-->
+    <!--<div class="container">-->
+        <!--<header>-->
+            <!--<h1><a href="{% url 'top_movies' %}">MovieBase</a></h1>-->
+            <!--<div>-->
+                <!--{% if user.is_anonymous %}-->
+                    <!--<p><a href="{% url 'django.contrib.auth.views.login' %}">Login  </a></p>-->
+                    <!--<p><a href="{% url 'user_register' %}">Register</a></p>-->
+                <!--{% else %}-->
+                    <!--<p>You are logged in as <a href="{% url 'show_rater' user.rater.id %}">{{ user.username }}</a></p>-->
+                    <!--<a href="{% url 'logout' %}">logout</a>-->
+                <!--{% endif %}-->
+            <!--</div>-->
+            <!--{% if messages %}-->
+                <!--<ul class="messages">-->
+                    <!--{% for message in messages %}-->
+                        <!--<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>-->
+                    <!--{% endfor %}-->
+                <!--</ul>-->
+            <!--{% endif %}-->
+        <!--</header>-->
+        <!--{% block content %}-->
+        <!--{% endblock %}-->
+        <!--<footer>-->
+            <!--<strong>Created at TIY Durham Python 2015</strong>-->
+        <!--</footer>-->
+    <!--</div>-->
+<!--</body>-->
+<!--</html>-->

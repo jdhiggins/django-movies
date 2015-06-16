@@ -40,6 +40,20 @@ def top_movies(request):
     #   annotate derives data from database and returns it  __ if you are looking in a related model
     # gt is greater than, gte is greater than or equal to
 
+
+def most_movies(request):
+    rated_movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
+        ('rating__rating')).order_by('-num_ratings').select_related()[:20]
+    return render(request, "moviebase/most_movies.html",
+                  {"rated_movies": rated_movies})
+
+
+def all_genres(request):
+    genres = Genre.objects.all()
+    return render(request, "moviebase/all_genres.html",
+                  {"genres": genres})
+
+
 def show_rater(request, rater_id):
 
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count

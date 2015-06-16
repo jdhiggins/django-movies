@@ -26,7 +26,7 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>You can only edit your own <a href="{% url 'show_rater' rater.id %}">user page</a>.</p>
+        <p>You can only edit your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
         <h3>User {{ rater.id }} is a {{ rater.gender }} from zip {{ rater.zip_code }}</h3>
         <h4>Average rating: {{ rater.average_rating }}</h4>
         <h4>Total ratings: {{ rater.ratings_count }}</h4>

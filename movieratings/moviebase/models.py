@@ -132,7 +132,7 @@ class Movie(models.Model):
     def average_rating(self):
     # ratings = self.rating_set.all()
         average_rating = self.rating_set.all().aggregate(Avg('rating'))
-        if average_rating['rating__avg']:
+        if average_rating:
             return round(average_rating['rating__avg'], 2)
         else:
             return "No ratings"
@@ -140,7 +140,7 @@ class Movie(models.Model):
     @property
     def ratings_count(self):
         count_rating = self.rating_set.all().aggregate(Count('rating'))
-        if count_rating['rating_count']:
+        if count_rating:
             return (count_rating['rating__count'])
         else:
             return "No ratings"

@@ -3,6 +3,8 @@ import operator
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+
 # Create your models here.
 
 class Rater(models.Model):
@@ -222,7 +224,7 @@ class Rating(models.Model):
 
     rater = models.ForeignKey(Rater, null=True)
 
-    posted_at = models.DateTimeField(null=True)
+    posted_at = models.DateTimeField(null=True, default=timezone.now)
 
     text_rating = models.CharField(max_length=255, null=True)
 

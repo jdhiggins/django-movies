@@ -38,6 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'moviebase',
+    'bootstrap3',
+    'debug_toolbar',
+    'django_extensions'
 )
 
 MIDDLEWARE_CLASSES = (

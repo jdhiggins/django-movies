@@ -27,11 +27,18 @@
         <h4>Total ratings: {{ rater.ratings_count }}</h4>
         {% for rating in ratings %}
             <div>
-                <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                {% if rating.text_rating == 'None' %}
+                    <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                        {{ rating.rating }}</p>
+                {% else %}
+                    <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
                     {{ rating.rating }}, Text Rating: {{rating.text_rating}}</p>
+                {% endif %}
             </div>
         {% endfor %}
     {% endif %}
 {% endblock %}
 
 
+
+<!--should put in a way to stop user who doesn't have a rater from crashing the system-->

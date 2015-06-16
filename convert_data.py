@@ -27,7 +27,7 @@ with open("data/ml-1m/ratings.dat") as infile:
     reader = csv.reader((line.replace("::", ";") for line in infile),
                         delimiter=";")
     for idx, row in enumerate(reader):
-        posted_at = datetime.fromtimestamp(int(row[3])).strftime('%Y-%m-%d %H:%M:%S')
+        posted_at = datetime.fromtimestamp(int(row[3]), tz=datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
         ratings.append({"model": "moviebase.Rating",
                         "pk": idx + 1,
                         "fields": {
@@ -39,7 +39,7 @@ with open("data/ml-1m/ratings.dat") as infile:
 
 with open("movieratings/fixtures/ratings.json", "w") as outfile:
     outfile.write(json.dumps(ratings))
-    
+
 
 print("Converting movies...")
 movies = []

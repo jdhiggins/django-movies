@@ -1,33 +1,45 @@
 <!DOCTYPE html>
+{% load staticfiles %}
+{% load bootstrap3 %}
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MovieBase</title>
 </head>
 <body>
-<header>
-    <h1>Welcome to <a href="{% url 'top_movies' %}">MovieBase</a><i>-->>the movie ratings database</i></h1>
-    <div>
-        {% if user.is_anonymous %}
-            <p><a href="{% url 'django.contrib.auth.views.login' %}">Login  </a></p>
-            <p><a href="{% url 'user_register' %}">Register</a></p>
-        {% else %}
-            <p>You are logged in as <a href="{% url 'show_rater' user.rater.id %}">{{ user.username }}</a></p>
-            <a href="{% url 'logout' %}">logout</a>
-        {% endif %}
+<nav class="navbar navbar-inverse">
+    <div class="container">
+      ...
+    </div>  ...
+</nav>
+    <div class="container">
+        <header>
+            <h1><a href="{% url 'top_movies' %}">MovieBase</a></h1>
+            <div>
+                {% if user.is_anonymous %}
+                    <p><a href="{% url 'django.contrib.auth.views.login' %}">Login  </a></p>
+                    <p><a href="{% url 'user_register' %}">Register</a></p>
+                {% else %}
+                    <p>You are logged in as <a href="{% url 'show_rater' user.rater.id %}">{{ user.username }}</a></p>
+                    <a href="{% url 'logout' %}">logout</a>
+                {% endif %}
+            </div>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </header>
+        {% block content %}
+        {% endblock %}
+        <footer>
+            <strong>Created at TIY Durham Python 2015</strong>
+        </footer>
     </div>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</header>
-{% block content %}
-{% endblock %}
-<footer>
-    <strong>Created at TIY Durham Python 2015</strong>
-</footer>
 </body>
 </html>

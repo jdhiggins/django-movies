@@ -3,7 +3,7 @@
 {% block content %}
     {% if user.is_anonymous %}
         <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to see this page.</p>
-    {% elif user.rater = rater %}
+    {% elif user.rater == rater %}
         <h2>Hello, User {{ rater.id }}</h2>
         <h4>Your average rating: {{ rater.average_rating }}</h4>
         <h4>Your total ratings: {{ rater.ratings_count }}</h4>
@@ -16,22 +16,27 @@
         <h3>Your Ratings history:</h3>
         {% for rating in ratings %}
             <div>
-                <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                {% if not rating.text_rating %}
+                    <p><a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                        {{ rating.rating }}</p>
+                {% else %}
+                    <p><a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
                     {{ rating.rating }}, Text Rating: {{rating.text_rating}}</p>
+                {% endif %}
             </div>
         {% endfor %}
     {% else %}
-        <p>You can only edit your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
+        <p>You can only edit your own <a href="{% url 'show_rater' rater.id %}">user page</a>.</p>
         <h3>User {{ rater.id }} is a {{ rater.gender }} from zip {{ rater.zip_code }}</h3>
         <h4>Average rating: {{ rater.average_rating }}</h4>
         <h4>Total ratings: {{ rater.ratings_count }}</h4>
         {% for rating in ratings %}
             <div>
-                {% if rating.text_rating == 'None' %}
-                    <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                {% if not rating.text_rating %}
+                    <p><a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
                         {{ rating.rating }}</p>
                 {% else %}
-                    <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                    <p><a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
                     {{ rating.rating }}, Text Rating: {{rating.text_rating}}</p>
                 {% endif %}
             </div>

@@ -1,9 +1,10 @@
 from django.db import models
 import operator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.db.models import Avg, Count
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+
 
 # Create your models here.
 
@@ -226,7 +227,7 @@ class Rating(models.Model):
 
     posted_at = models.DateTimeField(null=True, default=timezone.now)
 
-    text_rating = models.CharField(max_length=255, null=True)
+    text_rating = models.CharField(max_length=255, null=True, default="None")
 
     def __str__(self):
         return "{} reviewed {} || {} * rating.".format(self.rater.id, self.movie.title, self.rating)
@@ -256,6 +257,7 @@ def change_emails():
 def delete_users():
     for user in User.objects.all():
         user.delete()
+
 
 
 

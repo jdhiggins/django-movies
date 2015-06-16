@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User, AnonymousUser
 
 # Create your views here.
 
@@ -44,6 +45,7 @@ def show_rater(request, rater_id):
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')
     rater = Rater.objects.get(pk=rater_id)
+#    rater = get_rater(request.user)
     #probably should move this to model for rater as a property (rater.ratings)
     ratings = rater.rating_set.all()
     movie_set = [rating.movie for rating in ratings]
@@ -208,3 +210,17 @@ def delete_rating(request, movie_id, rating_id):
                   "moviebase/movie/{}.html".format(movie_id),
                   {'delete_form': delete_form})
 
+
+def get_rater(user):
+    """Gets the profile for a user. Ensures profile exists."""
+    if type(user) == AnonymousUser:
+        return None
+    else:
+        try:
+            rater = user.rater
+        except Rater.DoesNotExist:
+            rater = Rater()
+            rater.user = user
+            rater.save()
+        finally:
+            return rater

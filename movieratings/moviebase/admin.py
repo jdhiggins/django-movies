@@ -9,9 +9,9 @@ class RaterAdmin(admin.ModelAdmin):
     list_display = ['gender', 'age', 'num_reviews', 'average_rating', 'zip_code']
 
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ['movie', 'rater', 'rating', 'posted_at']
+    list_display = ['movie', 'rater', 'rating', 'posted_at', 'text_rating', 'pk']
     fieldsets = [
-        ('Rating information',  {'fields': ['rater', 'rating']}),
+        ('Rating information',  {'fields': ['rater', 'rating', 'text_rating', 'posted_at']}),
         ('Movie information',    {'fields': ['movie']}),
     ]
     list_filter = ['rater']

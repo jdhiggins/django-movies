@@ -230,8 +230,11 @@ class Rating(models.Model):
 def create_users():
     for rater in Rater.objects.all():
         user = User.objects.create_user('User{}'.format(rater.id),
-                                        'user{}'.format(rater.id),
-                                        '{}password'.format(rater.id))
+                                        'user{}@example.com'.format(rater.id),
+                                        'password'.format(rater.id))
+        password = "password"
+        user.set_password(password)
+        user.save()
         rater.user = user
         rater.save()
 
@@ -241,6 +244,10 @@ def change_emails():
         password = "password"
         user.set_password(password)
         user.save()
+
+def delete_users():
+    for user in User.objects.all():
+        user.delete()
 
 
 

@@ -23,9 +23,9 @@ def top_movies(request):
     # Second Try Above.  It also worked, but I wanted to add functionality to it to filter by number of ratings
     #
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
-        ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')[:20]
+        ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating').select_related()[:20]
     rated_movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
-        ('rating__rating')).order_by('-num_ratings')[:20]
+        ('rating__rating')).order_by('-num_ratings').select_related()[:20]
     return render(request, "moviebase/top_movies.html",
                   {"movies": movies,
                   "rated_movies": rated_movies})

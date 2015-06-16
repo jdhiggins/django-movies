@@ -4,10 +4,10 @@
     {% if user.is_anonymous %}
         <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to see this page.</p>
     {% elif user.rater = rater %}
-        <h2>User {{ rater.id }}</h2>
-        <h4>Average rating: {{ rater.average_rating }}</h4>
-        <h4>Total ratings: {{ rater.ratings_count }}</h4>
-        <h4>Top movie suggestions:</h4>
+        <h2>Hello, User {{ rater.id }}</h2>
+        <h4>Your average rating: {{ rater.average_rating }}</h4>
+        <h4>Your total ratings: {{ rater.ratings_count }}</h4>
+        <h4>Your top movie suggestions:</h4>
         {% for movie in movies_not_seen %}
                 <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
                     {{ movie.average_rating }}</li>

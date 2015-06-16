@@ -2,6 +2,7 @@ from django.db import models
 import operator
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 class Rater(models.Model):
@@ -194,6 +195,10 @@ class Genre(models.Model):
         return self.genre
 
 
+def one_to_five(value):
+    if value not in [1, 2, 3, 4, 5]:
+        return ValidationError
+
 
 class Rating(models.Model):
     ONE = 1
@@ -210,7 +215,8 @@ class Rating(models.Model):
     )
 
     rating = models.IntegerField(choices=RATING_CHOICES,
-                                 null=True)
+                                 null=True,
+                                 validators=[one_to_five])
 
     movie = models.ForeignKey(Movie, null=True)
 

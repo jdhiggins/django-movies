@@ -115,10 +115,13 @@ class RatingForm(forms.ModelForm):
                                widget=forms.Select(),
                                required=True)
 
+    text_rating = forms.CharField(initial='None',
+                                  required=False)
+
 
     class Meta:
         model = Rating
-        fields = ('rating',)
+        fields = ('rating','text_rating')
 
 
 class EditForm(forms.ModelForm):
@@ -144,7 +147,7 @@ class EditForm(forms.ModelForm):
 
     class Meta:
         model = Rating
-        fields = ('rating',)
+        fields = ('rating','text_rating')
 
 
 class DeleteForm(forms.ModelForm):

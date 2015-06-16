@@ -9,17 +9,28 @@
         <h4>Total ratings: {{ rater.ratings_count }}</h4>
         <h4>Top movie suggestions:</h4>
         {% for movie in movies_not_seen %}
-                <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating: {{ movie.average_rating }}</li>
+                <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
+                    {{ movie.average_rating }}</li>
 
         {% endfor %}
         <h3>Your Ratings history:</h3>
         {% for rating in ratings %}
             <div>
-                <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating: {{ rating.rating }}</p>
+                <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                    {{ rating.rating }}, Text Rating: {{rating.text_rating}}</p>
             </div>
         {% endfor %}
     {% else %}
-        <p>You can only view your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
+        <p>You can only edit your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
+        <h3>User {{ rater.id }} is a {{ rater.gender }} from zip {{ rater.zip_code }}</h3>
+        <h4>Average rating: {{ rater.average_rating }}</h4>
+        <h4>Total ratings: {{ rater.ratings_count }}</h4>
+        {% for rating in ratings %}
+            <div>
+                <p>Title: <a href="{% url 'show_movie' rating.movie.id %}">{{ rating.movie.title }}</a> Rating:
+                    {{ rating.rating }}, Text Rating: {{rating.text_rating}}</p>
+            </div>
+        {% endfor %}
     {% endif %}
 {% endblock %}
 

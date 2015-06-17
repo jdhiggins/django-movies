@@ -1,22 +1,14 @@
 {% extends "moviebase/base.html" %}
+{% load bootstrap3 %}
 
 
 {% block content %}
-<h3>{{ movie.title }}</h3>
+
 <div class="container">
     <div class="row">
-        <div class="col-sm-6">
-            <h4>Average rating: {{ movie.average_rating }}</h4>
-            <h4>Total ratings: {{ movie.ratings_count}}</h4>
-            <h4>User Ratings:</h4>
+        <h3>{{ movie.title }}</h3>
 
-            {% for rating in ratings %}
-            <li class="list-unstyled"><a href="{% url 'show_rater' rating.rater.id %}">User: {{ rating.rater.id }}</a> ||
-                Rating: {{ rating.rating }}</li>
-            {% endfor %}
-        </div>
-
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             {% if user.is_anonymous %}
             <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to rate this movie.</p>
             {% elif user_rating %}
@@ -49,6 +41,33 @@
             <input type="submit" name="submit" value="Add rating"/>
             </form>
             {% endif %}
+        </div>
+        <div class="col-sm-8">
+            <h4>Average rating: {{ movie.average_rating }}</h4>
+            <h4>Total ratings: {{ movie.ratings_count}}</h4>
+            <h4>User Ratings:</h4>
+
+            {% for rating in ratings %}
+            <li class="list-unstyled"><a href="{% url 'show_rater' rating.rater.id %}">User: {{ rating.rater.id }}</a> ||
+                Rating: {{ rating.rating }}</li>
+            {% endfor %}
+            {% bootstrap_pagination ratings %}
+            <!--or-->
+            <!--<div class="pagination">-->
+            <!--<span class="step-links">-->
+                <!--{% if ratings.has_previous %}-->
+                    <!--<a href="?page={{ ratings.previous_page_number }}">previous</a>-->
+                <!--{% endif %}-->
+
+                <!--<span class="current">-->
+                    <!--Page {{ ratings.number }} of {{ ratings.paginator.num_pages }}.-->
+                <!--</span>-->
+
+                <!--{% if ratings.has_next %}-->
+                    <!--<a href="?page={{ ratings.next_page_number }}">next</a>-->
+                <!--{% endif %}-->
+            <!--</span>-->
+            <!--</div>-->
         </div>
     </div>
 </div>

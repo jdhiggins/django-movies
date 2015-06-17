@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, AnonymousUser
-
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -68,21 +68,37 @@ def show_rater(request, rater_id):
 
 def show_movie(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
-    ratings = movie.rating_set.all()
-    rating_set = [rating.movie for rating in request.user.rater.rating_set.all()]
+    ratings = Rating.objects.filter(movie=movie).select_related('rater').all()
+    #if null is true for Rater, have to put Rater in select_related
+    # ratings_set = [rating.movie for rating in request.user.rater.rating_set.all()]
+    #
+    # rating_dict = {rating.movie: rating for rating in request.user.rater.rating_set.all()}
+    # if movie in ratings_set:
+    #     user_rating = rating_dict[movie]
+    # else:
+    #     user_rating = None
+    #_____________________________
 
-    rating_dict = {rating.movie: rating for rating in request.user.rater.rating_set.all()}
-    if movie in rating_set:
-        user_rating = rating_dict[movie]
-    else:
+    ratings_paginator = Paginator(ratings, 30)
+
+    user = request.user
+
+    try:
+        user_rating = Rating.objects.get(rater_id=user.rater.id, movie_id=movie_id)
+    except:
         user_rating = None
+
+    page=request.GET.get('page',1)
     rating_form = RatingForm()
     edit_form = EditForm()
     return render(request,
                   "moviebase/movie.html",
                   {"movie": movie,
-                   "ratings": ratings,
+                   #"ratings": ratings,
+                   "ratings": (ratings_paginator.page(page)),
+                   #see movie.html
                    "rating_form": rating_form,
+                   #
                    "user_rating": user_rating,
                    "edit_form": edit_form
                    })
@@ -90,7 +106,7 @@ def show_movie(request, movie_id):
 
 def show_genre(request, genre_id):
     genre = Genre.objects.get(pk=genre_id)
-    movies = genre.movie_set.all()
+    movies = genre.movie_set.select_related().all()
     top_genre = movies.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating').select_related()[:20]
     most_genre = movies.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count

@@ -21,7 +21,9 @@
             <li><a href="{% url 'top_movies' %}">Best Rated</a></li>
             <li><a href="{% url 'most_movies' %}">Most Reviews</a></li>
             <li><a href="{% url 'all_genres' %}">By Genre</a></li>
-
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'show_rater' user.rater.id %}">Your Page</a></li>
+            {% endif %}
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

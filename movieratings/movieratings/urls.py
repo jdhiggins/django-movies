@@ -34,3 +34,5 @@ urlpatterns = [
         name="delete_rating"),
     url(r'^moviebase/genre/(?P<genre_id>\d+)$', moviebase_views.show_genre, name="show_genre"),
 ]
+
+#may need to add slash

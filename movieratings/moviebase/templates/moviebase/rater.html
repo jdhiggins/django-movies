@@ -24,13 +24,13 @@
             <h3>Rating history</h3>
             {% for rating in ratings %}
                 <div>
-                    {% if not rating.text_rating %}
-                        <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong></li>
+                    {% if rating.text_rating %}
+                       <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
+                                {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong>, Text Rating:
+                                {{rating.text_rating}}</li>
                     {% else %}
                         <li class="list-unstyled"> <a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong>, Text Rating:
-                            {{rating.text_rating}}</li>
+                                {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong></li>
                     {% endif %}
                 </div>
             {% endfor %}
@@ -42,24 +42,24 @@
         <h4>Total ratings: {{ rater.ratings_count }}</h4>
         {% for rating in ratings %}
             <div>
-                {% if not rating.text_rating %}
-                   <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong></li>
-                {% else %}
-                    <li class="list-unstyled"> <a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong>, Text Rating:
-                            {{rating.text_rating}}</li>
-                {% endif %}
-            </div>
-        {% endfor %}
-        {% for rating in ratings %}
-            <div>
                 {% if rating.text_rating %}
                    <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating <strong>{{ rating.text_rating }}</strong></li>
+                            {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong>, Text Rating:
+                            {{rating.text_rating}}</li>
+                {% else %}
+                    <li class="list-unstyled"> <a href="{% url 'show_movie' rating.movie.id %}">
+                            {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong></li>
                 {% endif %}
             </div>
         {% endfor %}
+        <!--{% for rating in ratings %}-->
+            <!--<div>-->
+                <!--{% if rating.text_rating != None  %}-->
+                   <!--<li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">-->
+                            <!--{{ rating.movie.title }}</a> Rating <strong>{{ rating.text_rating }}</strong></li>-->
+                <!--{% endif %}-->
+            <!--</div>-->
+        <!--{% endfor %}-->
     {% endif %}
 {% endblock %}
 

@@ -1,13 +1,10 @@
 {% extends "moviebase/base.html" %}
 
 {% block content %}
- <h1>Most reviewed movies at MovieBase:</h1>
-    <ul>
+ <h1>Most reviewed</h1>
         {% for movie in rated_movies %}
-                <li><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
-                    <strong>{{ movie.average_rating }}</strong>, Number of ratings:
-                    <strong>{{ movie.ratings_count }}</strong></li>
+                <li class="list-unstyled"><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a>
+                    <strong>{{ movie.average_rating }}</strong> by {{ movie.ratings_count }} users</li>
         {% endfor %}
-    </ul>
 
 {% endblock %}

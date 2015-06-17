@@ -25,13 +25,11 @@ def top_movies(request):
     #
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating').select_related()[:20]
-    rated_movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
-        ('rating__rating')).order_by('-num_ratings').select_related()[:20]
-    genres = Genre.objects.all()
+    # rated_movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
+    #     ('rating__rating')).order_by('-num_ratings').select_related()[:20]
+    # genres = Genre.objects.all()
     return render(request, "moviebase/top_movies.html",
-                  {"movies": movies,
-                   "rated_movies": rated_movies,
-                   "genres": genres})
+                  {"movies": movies})
     # Have to do rating__rating because rating has relationship to movie as ForeignKey, otherwise can just do rating
     #    as in    count_rating = self.rating_set.all().aggregate(Count('rating'))
     #   -avg_rating means reverse the order
@@ -55,17 +53,12 @@ def all_genres(request):
 
 
 def show_rater(request, rater_id):
-
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')
     rater = Rater.objects.get(pk=rater_id)
-#    rater = get_rater(request.user)
-    #probably should move this to model for rater as a property (rater.ratings)
     ratings = rater.rating_set.all()
     movie_set = [rating.movie for rating in ratings]
     movies_not_seen = [movie for movie in movies if movie not in movie_set]
-
-
     return render(request,
                   "moviebase/rater.html",
                   {"rater": rater,

@@ -1,4 +1,5 @@
 {% extends "moviebase/base.html" %}
+{% load bootstrap3 %}
 
 {% block content %}
     {% if user.is_anonymous %}
@@ -34,6 +35,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
+            {% bootstrap_pagination ratings %}
         </div>
     {% else %}
         <p>You can only edit your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
@@ -50,6 +52,7 @@
                     <li class="list-unstyled"> <a href="{% url 'show_movie' rating.movie.id %}">
                             {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong></li>
                 {% endif %}
+                {% bootstrap_pagination ratings %}
             </div>
         {% endfor %}
         <!--{% for rating in ratings %}-->

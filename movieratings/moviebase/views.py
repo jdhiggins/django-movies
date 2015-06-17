@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, AnonymousUser
 from django.core.paginator import Paginator
+from django.views.generic import ListView
 # Create your views here.
 
 
@@ -38,6 +39,24 @@ def top_movies(request):
     #   annotate derives data from database and returns it  __ if you are looking in a related model
     # gt is greater than, gte is greater than or equal to
 
+class AllMoviesListView(ListView):
+    model = Movie
+    paginate_by = 30
+    context_object_name = 'movies'
+    #can use moviebaseinstead of object list
+#    template_name = 'all_movies'
+
+
+class BestMoviesListView(ListView):
+    template_name = 'moviebase/best_movies.html'
+    model = Movie
+    context_object_name = 'movies'
+    queryset = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
+        ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating').select_related()
+    paginate_by = 30
+    header = "Best Movies"
+
+
 
 def most_movies(request):
     rated_movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
@@ -55,14 +74,18 @@ def all_genres(request):
 def show_rater(request, rater_id):
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')
-    rater = Rater.objects.get(pk=rater_id)
+    rater = Rater.objects.prefetch_related().get(pk=rater_id)
     ratings = rater.rating_set.all()
+    user_ratings_paginator = Paginator(ratings, 30)
+
     movie_set = [rating.movie for rating in ratings]
     movies_not_seen = [movie for movie in movies if movie not in movie_set]
+
+    page=request.GET.get('page',1)
     return render(request,
                   "moviebase/rater.html",
                   {"rater": rater,
-                   "ratings": ratings,
+                   "ratings": (user_ratings_paginator.page(page)),
                    "movies_not_seen": movies_not_seen[:20]})
 
 

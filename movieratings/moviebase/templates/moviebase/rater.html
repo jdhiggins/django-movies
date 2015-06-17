@@ -25,14 +25,12 @@
             <h3>Rating history</h3>
             {% for rating in ratings %}
                 <div>
-                    {% if rating.text_rating %}
                        <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
-                                {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong>, Text Rating:
-                                {{rating.text_rating}}</li>
-                    {% else %}
-                        <li class="list-unstyled"> <a href="{% url 'show_movie' rating.movie.id %}">
-                                {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong></li>
-                    {% endif %}
+                                {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong></li>
+                            {% if rating.text_rating != 'None' %}
+                            <li class="list-comment"><small>You said: "{{rating.text_rating}}"</small></li>
+                                {% endif %}
+
                 </div>
             {% endfor %}
             {% bootstrap_pagination ratings %}
@@ -43,18 +41,16 @@
         <h4>Average rating: {{ rater.average_rating }}</h4>
         <h4>Total ratings: {{ rater.ratings_count }}</h4>
         {% for rating in ratings %}
-            <div>
-                {% if rating.text_rating %}
-                   <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong>, Text Rating:
-                            {{rating.text_rating}}</li>
-                {% else %}
-                    <li class="list-unstyled"> <a href="{% url 'show_movie' rating.movie.id %}">
-                            {{ rating.movie.title }}</a> Rating: <strong>{{ rating.rating }}</strong></li>
-                {% endif %}
-                {% bootstrap_pagination ratings %}
-            </div>
+                <div>
+                       <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
+                                {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong></li>
+                            {% if rating.text_rating != 'None' %}
+                            <li class="list-comment"><small>You said: "{{rating.text_rating}}"</small></li>
+                                {% endif %}
+
+                </div>
         {% endfor %}
+        {% bootstrap_pagination ratings %}
         <!--{% for rating in ratings %}-->
             <!--<div>-->
                 <!--{% if rating.text_rating != None  %}-->

@@ -1428,6 +1428,12 @@ ul ol,
 ol ol {
   margin-bottom: 0;
 }
+.list-comment {
+    padding-left: 10px;
+    list-style: none;
+}
+
+
 .list-unstyled {
   padding-left: 0;
   list-style: none;

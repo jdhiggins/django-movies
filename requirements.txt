@@ -10,3 +10,4 @@ django-extensions
 django-debug-toolbar
 psycopg2
 django-endless-pagination
+matplotlib

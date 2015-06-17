@@ -10,6 +10,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, AnonymousUser
 from django.core.paginator import Paginator
 from django.views.generic import ListView
+from django.forms.models import model_to_dict
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 # Create your views here.
 
 
@@ -270,3 +277,21 @@ def get_rater(user):
             rater.save()
         finally:
             return rater
+
+# def updates_chart(request, movie_id):
+#      df = pd.DataFrame(model_to_dict(r) for r in Rating.objects.filter(movie.id =movie_id))
+#      updates=Updates.objects.all()
+#      df = pd.Dataframe(model_to_dict(update) for update in updates)
+#      df[‘count’] = 1
+#      df.index = df[‘posted_at’]
+#      counts = df[‘count’]
+#      counts = counts.sort_index()
+#      series = pd.expanding_count(counts).resample(‘W’, how=np.max, fill_method=pad)
+#      response = HttpResponse(content_type=‘image/png’) #can return text, csv, etc.
+#      fig = series.plot()
+#      fig = plt.figure()
+#      ax = fig.add_subplot(111)
+#      ax.plot(series)
+#      canvas = FigureCanvas(fig)
+#      canvas.print_png(response)
+#      return response

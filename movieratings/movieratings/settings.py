@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import os.path
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,7 +42,8 @@ INSTALLED_APPS = (
     'moviebase',
     'bootstrap3',
     'debug_toolbar',
-    'django_extensions'
+    'django_extensions',
+    'endless_pagination'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -131,3 +133,8 @@ STATICFILES_DIRS = (
 
 
 LOGIN_REDIRECT_URL = 'top_movies'
+
+
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django.core.context_processors.request',
+)

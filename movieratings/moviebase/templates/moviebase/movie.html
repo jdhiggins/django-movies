@@ -1,47 +1,58 @@
 {% extends "moviebase/base.html" %}
 
-{% block content %}
-    <h2>{{ movie.title }}</h2>
 
-    <div>
-        {% if user.is_anonymous %}
-        <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to rate this movie.</p>
-        {% elif user_rating %}
-        <p>You have already reviewed {{ movie }}, you gave it a <em>{{ user_rating.rating }}</em></p>
-        <p>You can change your review with the form below:</p>
-        <form method="POST" action="{% url 'edit_rating' movie.id user_rating.id %}">
-            {% csrf_token %}
-            {{ edit_form.as_p }}
+{% block content %}
+<h3>{{ movie.title }}</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h4>Average rating: {{ movie.average_rating }}</h4>
+            <h4>Total ratings: {{ movie.ratings_count}}</h4>
+            <h4>User Ratings:</h4>
+
+            {% for rating in ratings %}
+            <li class="list-unstyled"><a href="{% url 'show_rater' rating.rater.id %}">User: {{ rating.rater.id }}</a> ||
+                Rating: {{ rating.rating }}</li>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-6">
+            {% if user.is_anonymous %}
+            <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to rate this movie.</p>
+            {% elif user_rating %}
+            <h4>You have already reviewed <em>{{ movie }}</em></h4>
+            <p>Current rating: <strong>{{ user_rating.rating }}</strong></p>
+            <form method="POST" action="{% url 'delete_rating' movie.id user_rating.id %}">
+                {% csrf_token %}
+                {{ delete_form.as_p }}
+
+                <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Delete rating"/>
+            </form>
+            <h4>Edit your rating:</h4>
+            <form method="POST" action="{% url 'edit_rating' movie.id user_rating.id %}">
+                {% csrf_token %}
+                {{ edit_form.as_p }}
 
             <!-- Provide a button to click to submit the form. -->
             <input type="submit" name="submit" value="Edit rating"/>
-        </form>
-        <p>You can delete your rating below:</p>
-        <form method="POST" action="{% url 'delete_rating' movie.id user_rating.id %}">
-            {% csrf_token %}
-            {{ delete_form.as_p }}
+            </form>
 
-            <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Delete rating"/>
-        </form>
-        {% else %}
-        <h2>Add a new rating</h2>
-        <form method="POST" action="{% url 'make_rating' movie.id %}">
+
+            {% else %}
+            <h4>Add a new rating</h4>
+            <form method="POST" action="{% url 'make_rating' movie.id %}">
             {% csrf_token %}
             {{ rating_form.as_p }}
 
             <!-- Provide a button to click to submit the form. -->
             <input type="submit" name="submit" value="Add rating"/>
-        </form>
-        {% endif %}
-    </div>
-    <h3>Average rating: {{ movie.average_rating }}</h3>
-    <h3>Total ratings: {{ movie.ratings_count}}</h3>
-    <h4>User Ratings:</h4>
-    {% for rating in ratings %}
-        <div>
-            <p><a href="{% url 'show_rater' rating.rater.id %}">User: {{ rating.rater.id }}</a> || Rating: {{ rating.rating }}</p>
+            </form>
+            {% endif %}
         </div>
-    {% endfor %}
+    </div>
+</div>
 {% endblock %}
+
+
 

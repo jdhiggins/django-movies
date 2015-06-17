@@ -5,23 +5,23 @@
         <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to see this page.</p>
     {% elif user.rater == rater %}
         <div class="row">
-            <div class="col-md-4">
-                <h2>Hello, User {{ rater.id }}</h2>
+            <div class="col-sm-4">
+                <h4><strong>Hello, User {{ rater.id }}</strong></h4>
             </div>
-            <div class="col-md-4">
-                <h4>Your average rating: {{ rater.average_rating }}</h4>
+            <div class="col-sm-4">
+                <h4>Average rating: {{ rater.average_rating }}</h4>
             </div>
-            <div class="col-md-4">
-                <h4>Your total ratings: {{ rater.ratings_count }}</h4>
+            <div class="col-sm-4">
+                <h4>Total ratings: {{ rater.ratings_count }}</h4>
             </div>
         </div>
         <div>
-            <h4>Your top movie suggestions:</h4>
+            <h3>Suggestions for you</h3>
             {% for movie in movies_not_seen %}
                 <li class="list-unstyled"><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
                     {{ movie.average_rating }}</li>
             {% endfor %}
-            <h3>Your Ratings history:</h3>
+            <h3>Rating history</h3>
             {% for rating in ratings %}
                 <div>
                     {% if not rating.text_rating %}

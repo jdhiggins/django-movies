@@ -34,7 +34,8 @@ urlpatterns = [
         name="delete_rating"),
     url(r'^moviebase/genre/(?P<genre_id>\d+)$', moviebase_views.show_genre, name="show_genre"),
     url(r'^moviebase/all_movies$', moviebase_views.AllMoviesListView.as_view(), name="all_movies"),
-    url(r'^moviebase/best_movies$', moviebase_views.BestMoviesListView.as_view(), name="best_movies")
+    url(r'^moviebase/best_movies$', moviebase_views.BestMoviesListView.as_view(), name="best_movies"),
+    url(r'^moviebase/ratings_chart/(?P<movie_id>\d+)$', moviebase_views.ratings_chart, name="ratings_chart"),
 ]
 
 #may need to add slash

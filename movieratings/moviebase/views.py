@@ -15,6 +15,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from django.forms import model_to_dict
+
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 # Create your views here.
@@ -109,7 +111,7 @@ def show_movie(request, movie_id):
     #     user_rating = None
     #_____________________________
 
-    ratings_paginator = Paginator(ratings, 30)
+    ratings_paginator = Paginator(ratings, 15)
 
     user = request.user
 
@@ -278,20 +280,30 @@ def get_rater(user):
         finally:
             return rater
 
-# def updates_chart(request, movie_id):
-#      df = pd.DataFrame(model_to_dict(r) for r in Rating.objects.filter(movie.id =movie_id))
-#      updates=Updates.objects.all()
-#      df = pd.Dataframe(model_to_dict(update) for update in updates)
-#      df[‘count’] = 1
-#      df.index = df[‘posted_at’]
-#      counts = df[‘count’]
-#      counts = counts.sort_index()
-#      series = pd.expanding_count(counts).resample(‘W’, how=np.max, fill_method=pad)
-#      response = HttpResponse(content_type=‘image/png’) #can return text, csv, etc.
-#      fig = series.plot()
-#      fig = plt.figure()
-#      ax = fig.add_subplot(111)
-#      ax.plot(series)
-#      canvas = FigureCanvas(fig)
-#      canvas.print_png(response)
-#      return response
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib
+matplotlib.style.use('ggplot')
+
+def ratings_chart(request, movie_id):
+    ratings = Rating.objects.filter(movie_id = movie_id)
+    df = pd.DataFrame(model_to_dict(rating) for rating in ratings)
+    df.index=df['posted_at']
+    ratings = df['rating']
+    ratings = ratings.sort_index()
+    series = pd.expanding_mean(ratings)
+    series = series.resample('M', how=np.max, fill_method='pad')
+
+    response = HttpResponse(content_type='image/png')
+
+    fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.plot(series)
+    series.plot()
+    plt.title("Average rating over time")
+    plt.xlabel("")
+    canvas = FigureCanvas(fig)
+    canvas.print_png(response)
+    return response

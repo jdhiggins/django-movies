@@ -349,7 +349,7 @@ def rater_year_chart(request, rater_id):
     year_df = year_df[0]
     response = HttpResponse(content_type='image/png')
     fig = plt.figure(figsize=(7, 9))
-    year_df.plot(kind="barh")
+    year_df.plot(kind="barh", color="#33CC99")
     plt.title("User Ratings by Movie Year")
     plt.xlabel("Number of Reviews")
     plt.ylabel("Year")
@@ -367,7 +367,7 @@ def rater_genre_chart(request, rater_id):
     genre_df = genre_df.sort_index()[0]
     response = HttpResponse(content_type='image/png')
     fig = plt.figure(figsize=(7, 9))
-    genre_df.plot(kind="barh")
+    genre_df.plot(kind="barh", color="#336699")
     plt.title("User Ratings by Genre")
     plt.xlabel("Number of Reviews")
     plt.ylabel("Genre")

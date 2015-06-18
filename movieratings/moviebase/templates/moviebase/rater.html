@@ -16,11 +16,12 @@
                 <h4>Total ratings: {{ rater.ratings_count }}</h4>
             </div>
         </div>
-        <div>
+        <div class="row">
+            <div class="col-sm-5">
             <h3>Suggestions for you</h3>
             {% for movie in movies_not_seen %}
-                <li class="list-unstyled"><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a> Average Rating:
-                    {{ movie.average_rating }}</li>
+                <li class="list-unstyled"><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a></li>
+                <li class="list-comment"><small>Average Rating: {{ movie.average_rating }}</small></li>
             {% endfor %}
             <h3>Rating history</h3>
             {% for rating in ratings %}
@@ -34,31 +35,46 @@
                 </div>
             {% endfor %}
             {% bootstrap_pagination ratings %}
+            </div>
+            <div class="col-sm-7">
+                <div>
+                    <img src="{% url 'rater_chart' rater.id %}">
+                </div>
+                <div>
+                    <img src="{% url 'rater_year_chart' rater.id %}">
+                </div>
+            </div>
+
+
         </div>
     {% else %}
-        <p>You can only edit your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
-        <h3>User {{ rater.id }} || {{ rater.gender }} || {{ rater.zip_code }}</h3>
-        <h4>Average rating: {{ rater.average_rating }}</h4>
-        <h4>Total ratings: {{ rater.ratings_count }}</h4>
-        {% for rating in ratings %}
+        <div class="row">
+            <div class="col-sm-5">
+            <p>You can only edit your own <a href="{% url 'show_rater' user.rater.id %}">user page</a>.</p>
+                <h3>User {{ rater.id }} || {{ rater.gender }} || {{ rater.zip_code }}</h3>
+            <h4>Average rating: {{ rater.average_rating }}</h4>
+            <h4>Total ratings: {{ rater.ratings_count }}</h4>
+                {% for rating in ratings %}
                 <div>
-                       <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
+                    <li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">
                                 {{ rating.movie.title }}</a> Rating <strong>{{ rating.rating }}</strong></li>
-                            {% if rating.text_rating != 'None' %}
-                            <li class="list-comment"><small>You said: "{{rating.text_rating}}"</small></li>
-                                {% endif %}
-
+                    {% if rating.text_rating != 'None' %}
+                    <li class="list-comment"><small>They said: "{{rating.text_rating}}"</small></li>
+                    {% endif %}
                 </div>
-        {% endfor %}
-        {% bootstrap_pagination ratings %}
-        <!--{% for rating in ratings %}-->
-            <!--<div>-->
-                <!--{% if rating.text_rating != None  %}-->
-                   <!--<li class="list-unstyled"><a href="{% url 'show_movie' rating.movie.id %}">-->
-                            <!--{{ rating.movie.title }}</a> Rating <strong>{{ rating.text_rating }}</strong></li>-->
-                <!--{% endif %}-->
-            <!--</div>-->
-        <!--{% endfor %}-->
+                {% endfor %}
+                {% bootstrap_pagination ratings %}
+
+            </div>
+            <div class="col-sm-7">
+                <div>
+                <img src="{% url 'rater_chart' rater.id %}">
+                </div>
+                <div>
+                    <img src="{% url 'rater_year_chart' rater.id %}">
+                </div>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
 

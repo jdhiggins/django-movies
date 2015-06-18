@@ -85,7 +85,7 @@ def show_rater(request, rater_id):
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')
     rater = Rater.objects.prefetch_related().get(pk=rater_id)
     ratings = rater.rating_set.all()
-    user_ratings_paginator = Paginator(ratings, 30)
+    user_ratings_paginator = Paginator(ratings, 15)
 
     movie_set = [rating.movie for rating in ratings]
     movies_not_seen = [movie for movie in movies if movie not in movie_set]
@@ -95,7 +95,7 @@ def show_rater(request, rater_id):
                   "moviebase/rater.html",
                   {"rater": rater,
                    "ratings": (user_ratings_paginator.page(page)),
-                   "movies_not_seen": movies_not_seen[:20]})
+                   "movies_not_seen": movies_not_seen[:12]})
 
 
 def show_movie(request, movie_id):
@@ -295,6 +295,7 @@ def ratings_chart(request, movie_id):
     ratings = ratings.sort_index()
     series = pd.expanding_mean(ratings)
     series = series.resample('M', how=np.max, fill_method='pad')
+    series = series[2:]
 
     response = HttpResponse(content_type='image/png')
 
@@ -302,8 +303,50 @@ def ratings_chart(request, movie_id):
     # ax = fig.add_subplot(111)
     # ax.plot(series)
     series.plot()
-    plt.title("Average rating over time")
+    plt.title("Movie Average Rating Over Time")
     plt.xlabel("")
+    canvas = FigureCanvas(fig)
+    canvas.print_png(response)
+    return response
+
+def rater_chart(request, rater_id):
+    ratings = Rating.objects.filter(rater_id = rater_id)
+    df = pd.DataFrame(model_to_dict(rating) for rating in ratings)
+    df.index=df['posted_at']
+    ratings = df['rating']
+    ratings = ratings.sort_index()
+    series = pd.expanding_mean(ratings)
+    series = series.resample('M', how=np.max, fill_method='pad')
+    series = series[2:]
+
+    response = HttpResponse(content_type='image/png')
+
+    fig = plt.figure(figsize=(6,5))
+    series.plot()
+    plt.title("User Average Rating Over Time")
+    plt.xlabel("")
+    canvas = FigureCanvas(fig)
+    canvas.print_png(response)
+    return response
+
+import re
+from collections import Counter
+
+def rater_year_chart(request, rater_id):
+    ratings = Rating.objects.filter(rater_id = rater_id)
+#    genre_list = [rating.movie.genre for rating in ratings]
+    title_list = [rating.movie.title for rating in ratings]
+    year_list = [int(re.findall(r'\((\d+)\)', title)[0]) for title in title_list]
+    year_dict = Counter(year_list)
+    year_df = pd.DataFrame.from_dict(year_dict, orient='index')
+    year_df = year_df.sort_index()
+    year_df = year_df[0]
+    response = HttpResponse(content_type='image/png')
+    fig = plt.figure(figsize=(6, 9))
+    year_df.plot(kind="barh")
+    plt.title("User Ratings by Movie Year")
+    plt.xlabel("Number of Reviews")
+    plt.ylabel("Year")
     canvas = FigureCanvas(fig)
     canvas.print_png(response)
     return response

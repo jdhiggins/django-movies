@@ -6,9 +6,10 @@
 
 <div class="container">
     <div class="row">
-        <h3>{{ movie.title }}</h3>
+
 
         <div class="col-sm-4">
+            <h2>{{ movie.title }}</h2>
             {% if user.is_anonymous %}
             <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login  </a> to rate this movie.</p>
             {% elif user_rating %}
@@ -32,7 +33,7 @@
 
 
             {% else %}
-            <h4>Add a new rating</h4>
+            <h4>Add your rating</h4>
             <form method="POST" action="{% url 'make_rating' movie.id %}">
             {% csrf_token %}
             {{ rating_form.as_p }}
@@ -41,17 +42,18 @@
             <input type="submit" name="submit" value="Add rating"/>
             </form>
             {% endif %}
-        </div>
-        <div class="col-sm-8">
-            <h4>Average rating: {{ movie.average_rating }}</h4>
-            <h4>Total ratings: {{ movie.ratings_count}}</h4>
-            <h4>User Ratings:</h4>
+            <h3>Average rating: {{ movie.average_rating }}</h3>
+            <h3>Total ratings: {{ movie.ratings_count}}</h3>
+            <h2>User Ratings:</h2>
 
             {% for rating in ratings %}
             <li class="list-unstyled"><a href="{% url 'show_rater' rating.rater.id %}">User: {{ rating.rater.id }}</a> ||
                 Rating: {{ rating.rating }}</li>
             {% endfor %}
             {% bootstrap_pagination ratings %}
+        </div>
+        <div class="col-sm-8">
+            <img src="{% url 'ratings_chart' movie.id %}">
             <!--or-->
             <!--<div class="pagination">-->
             <!--<span class="step-links">-->
@@ -72,7 +74,7 @@
     </div>
 </div>
 <div>
-    <img src="{% url 'ratings_chart' movie.id %}">
+
 </div>
 {% endblock %}
 

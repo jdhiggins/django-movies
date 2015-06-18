@@ -90,7 +90,7 @@ def show_rater(request, rater_id):
     except:
         nearby = None
     ratings = rater.rating_set.all()
-    user_ratings_paginator = Paginator(ratings, 15)
+    user_ratings_paginator = Paginator(ratings, 20)
 
     movie_set = [rating.movie for rating in ratings]
     movies_not_seen = [movie for movie in movies if movie not in movie_set]
@@ -99,7 +99,7 @@ def show_rater(request, rater_id):
     return render(request,
                   "moviebase/rater.html",
                   {"rater": rater,
-                   "nearby": nearby[:6],
+                   "nearby": nearby[:8],
                    "ratings": (user_ratings_paginator.page(page)),
                    "movies_not_seen": movies_not_seen[:12]})
 

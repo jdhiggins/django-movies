@@ -23,6 +23,13 @@
                 <li class="list-unstyled"><a href="{% url 'show_movie' movie.id %}">{{ movie.title }}</a></li>
                 <li class="list-comment"><small>Average Rating: {{ movie.average_rating }}</small></li>
             {% endfor %}
+            <h3>Nearby users</h3>
+            {% if nearby %}
+            {% for user in nearby %}
+                <li class="list-unstyled"><a href="{% url 'show_rater' user.id %}">User:
+                    {{ user.id }}</a></li>
+            {% endfor %}
+            {% endif %}
             <h3>Rating history</h3>
             {% for rating in ratings %}
                 <div>
@@ -38,10 +45,10 @@
             </div>
             <div class="col-sm-7">
                 <div>
-                    <img src="{% url 'rater_chart' rater.id %}">
+                    <img src="{% url 'rater_year_chart' rater.id %}">
                 </div>
                 <div>
-                    <img src="{% url 'rater_year_chart' rater.id %}">
+                    <img src="{% url 'rater_genre_chart' rater.id %}">
                 </div>
             </div>
 
@@ -68,10 +75,10 @@
             </div>
             <div class="col-sm-7">
                 <div>
-                <img src="{% url 'rater_chart' rater.id %}">
+                <img src="{% url 'rater_year_chart' rater.id %}">
                 </div>
                 <div>
-                    <img src="{% url 'rater_year_chart' rater.id %}">
+                    <img src="{% url 'rater_genre_chart' rater.id %}">
                 </div>
             </div>
         </div>

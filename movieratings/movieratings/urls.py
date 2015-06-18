@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^moviebase/ratings_chart/(?P<movie_id>\d+)$', moviebase_views.ratings_chart, name="ratings_chart"),
     url(r'^moviebase/rater_chart/(?P<rater_id>\d+)$', moviebase_views.rater_chart, name="rater_chart"),
     url(r'^moviebase/rater_year_chart/(?P<rater_id>\d+)$', moviebase_views.rater_year_chart, name="rater_year_chart"),
+    url(r'^moviebase/rater_genre_chart/(?P<rater_id>\d+)$', moviebase_views.rater_genre_chart, name="rater_genre_chart"),
 ]
 
 #may need to add slash

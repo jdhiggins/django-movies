@@ -84,6 +84,11 @@ def show_rater(request, rater_id):
     movies = Movie.objects.annotate(avg_rating=Avg('rating__rating')).annotate(num_ratings=Count
         ('rating__rating')).filter(num_ratings__gt=30).order_by('-avg_rating')
     rater = Rater.objects.prefetch_related().get(pk=rater_id)
+
+    try:
+        nearby = Rater.objects.prefetch_related().filter(zip_code=rater.zip_code)
+    except:
+        nearby = None
     ratings = rater.rating_set.all()
     user_ratings_paginator = Paginator(ratings, 15)
 
@@ -94,6 +99,7 @@ def show_rater(request, rater_id):
     return render(request,
                   "moviebase/rater.html",
                   {"rater": rater,
+                   "nearby": nearby[:6],
                    "ratings": (user_ratings_paginator.page(page)),
                    "movies_not_seen": movies_not_seen[:12]})
 
@@ -342,11 +348,29 @@ def rater_year_chart(request, rater_id):
     year_df = year_df.sort_index()
     year_df = year_df[0]
     response = HttpResponse(content_type='image/png')
-    fig = plt.figure(figsize=(6, 9))
+    fig = plt.figure(figsize=(7, 9))
     year_df.plot(kind="barh")
     plt.title("User Ratings by Movie Year")
     plt.xlabel("Number of Reviews")
     plt.ylabel("Year")
+    canvas = FigureCanvas(fig)
+    canvas.print_png(response)
+    return response
+
+def rater_genre_chart(request, rater_id):
+    ratings = Rating.objects.filter(rater_id = rater_id)
+#    genre_list = [rating.movie.genre for rating in ratings]
+    genre_list = [rating.movie.genre.all() for rating in ratings]
+    genre_flat = [genre.genre for genres in genre_list for genre in genres]
+    genre_dict = Counter(genre_flat)
+    genre_df = pd.DataFrame.from_dict(genre_dict, orient='index')
+    genre_df = genre_df.sort_index()[0]
+    response = HttpResponse(content_type='image/png')
+    fig = plt.figure(figsize=(7, 9))
+    genre_df.plot(kind="barh")
+    plt.title("User Ratings by Genre")
+    plt.xlabel("Number of Reviews")
+    plt.ylabel("Genre")
     canvas = FigureCanvas(fig)
     canvas.print_png(response)
     return response
